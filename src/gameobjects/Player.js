@@ -1,3 +1,5 @@
+import { Inventory } from "./Inventory";
+
 export class Player extends Phaser.Physics.Arcade.Sprite{
     //this is to preload images/sprites so animations can be made here
     static preload(scene){
