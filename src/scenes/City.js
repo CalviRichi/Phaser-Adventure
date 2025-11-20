@@ -14,4 +14,14 @@ export class City extends Phaser.Scene{
     update(time){
         
     }
+
+    enterHouse(house) {
+        /*
+        this.scene.start(house, {
+            inventory, other info ...
+        });
+        */
+    }
+
+
 }
