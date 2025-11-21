@@ -12,6 +12,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
     }
 
     constructor(scene, x, y){
-        
+
+        /*
+        The player will take in whatever state that the inventory provides it
+        */
+
+        this.scene = scene;
+        this.x = x; this.y = y;
     }
 }
