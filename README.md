@@ -5,6 +5,12 @@ Created by Calvin Richards and Claire Buck
 
 Refer to the slides for November 18th to get more info on what to put in here (also helpful for the design doc)
 
+Comments from professor: day night cycle is getting pretty ambitious, suggests cops patrolling around homes
+that you must evade in order to get inside, lest you risk confronting them early. I'm thinking something like 
+a simpler version of how metal gear solid works. This does feel like it would necessitate a mini-map though,
+which would provide a *lot* of new challenges.
+
+We should divy up the work soon.
 
 #### KEY STRUCTURES:
     

@@ -19,5 +19,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
 
         this.scene = scene;
         this.x = x; this.y = y;
+
     }
 }
