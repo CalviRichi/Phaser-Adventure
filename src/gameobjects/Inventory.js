@@ -59,7 +59,6 @@ export class Inventory {
             }
         }
         this.weightRatio = (count) ? count : 1;
-        this.remove()
 
     }
 
@@ -84,6 +83,17 @@ export class Inventory {
             }
         }
         toBeRemoved.offSet.x = 0; toBeRemoved.offSet.y = 0;
+
+        // update the weight
+        let count = 0;
+        for (let i = 0; i < MAT_Y; i++) {
+            for (let j = 0; j < MAT_X; j++) {
+                if (this.itemMatrix[i][j]) count++;
+            
+            }
+        }
+        this.weightRatio = (count) ? count : 1;
+
         return toBeRemoved;
 
     }
