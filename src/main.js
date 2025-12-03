@@ -35,7 +35,7 @@ const config = {
 
 const game = new Phaser.Game(config);
 
-game.scene.start("UI"); // launch is persistent 
+//game.scene.start("UI"); // launch is persistent 
 //game.scene.start("City");
-game.scene.moveAbove("UI","City");
+//game.scene.moveAbove("UI","City");
 
