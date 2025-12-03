@@ -1,4 +1,4 @@
-import { Player } from "../gameobjects/Player";
+import { Player } from "../gameobjects/Player.js";
 import { Bullet } from "../gameobjects/Bullet.js";
 
 export class City extends Phaser.Scene{
@@ -20,6 +20,8 @@ export class City extends Phaser.Scene{
         var tileset = [urban1, urban2];
 
         var doors, cars, decoration, decoration_noclip, buildings, ground;
+
+      //  const UI = scene.get("UI");
         
         doors = this.map.createLayer("doors", tileset, 0, 0);
         cars = this.map.createLayer("cars", tileset, 0, 0);

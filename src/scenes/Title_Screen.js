@@ -10,7 +10,13 @@ export class Title_Screen extends Phaser.Scene {
         
     }
 
+    create() {
+
+    }
+
     update(time){
+        this.scene.stop("Title_Screen");
+        this.scene
         
     }
 }

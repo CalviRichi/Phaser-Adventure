@@ -1,4 +1,4 @@
-import { Item } from "./Item"; // figure out where this is used
+import { Item } from "./Item.js"; // figure out where this is used
 
 export class Inventory {
 
