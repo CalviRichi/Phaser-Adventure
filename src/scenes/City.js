@@ -14,6 +14,8 @@ export class City extends Phaser.Scene{
         this.load.image("urban2", "assets/urban2.png");
         this.load.image("player", "assets/Trollface.png");
         this.load.tilemapTiledJSON("city", "assets/basicCity.tmj"); // works
+
+        Player.preload(this);
     }
 
     create(){
@@ -42,7 +44,7 @@ export class City extends Phaser.Scene{
         decoration.setCollisionByExclusion([-1]); // can maybe get rid of the other decoration layer by properly setting up collision with the tiles
         
         this.player = new Player(this, 100, 100).setDepth(2); // not sure what x and y are yet
-        
+      
         // the only layers the player DOES NOT collide with are "ground" and "decoration_noclip"
         this.physics.add.collider(this.player, buildings, (player, tile) => {
 
@@ -81,9 +83,9 @@ export class City extends Phaser.Scene{
 
         });
 
-        // this.cameras.main.startFollow(this.player, true);
-        // this.cameras.main.setDeadzone(100,100);
-        // this.cameras.main.setZoom(1.5);
+      //  this.cameras.main.startFollow(this.player, true);
+      //  this.cameras.main.setDeadzone(100,100);
+      //  this.cameras.main.setZoom(1.5);
 
     }
 
@@ -92,6 +94,7 @@ export class City extends Phaser.Scene{
         this.last_time = time;
 
    //     this.player.update();
+     //   console.log(this.player.x + ", " + this.player.y);
         
     }
 
