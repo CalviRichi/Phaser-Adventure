@@ -4,6 +4,9 @@ import { Bullet } from "../gameobjects/Bullet.js";
 export class City extends Phaser.Scene{
     constructor(){
         super('City');
+
+        //constant for scaling
+        this.MAPSCALE = 2.5;
     }
 
     preload(){
@@ -26,24 +29,25 @@ export class City extends Phaser.Scene{
 
       //  const UI = scene.get("UI");
         
-        door = this.map.createLayer("door", tileset);
-        cars = this.map.createLayer("cars", tileset);
-        decoration = this.map.createLayer("decoration", tileset);
-        decoration_noclip = this.map.createLayer("decoration_noclip", tileset);
-        buildings = this.map.createLayer("buildings", tileset);
-        ground = this.map.createLayer("ground", tileset);
+        door = this.map.createLayer("door", tileset).setDepth(2).setScale(this.MAPSCALE);
+        cars = this.map.createLayer("cars", tileset).setDepth(2).setScale(this.MAPSCALE);
+        decoration = this.map.createLayer("decoration", tileset).setDepth(2).setScale(this.MAPSCALE);
+        decoration_noclip = this.map.createLayer("decoration_noclip", tileset).setDepth(2).setScale(this.MAPSCALE);
+        buildings = this.map.createLayer("buildings", tileset).setDepth(1).setScale(this.MAPSCALE);
+        ground = this.map.createLayer("ground", tileset).setDepth(0).setScale(this.MAPSCALE);
 
         buildings.setCollisionByExclusion([-1]); 
         door.setCollisionByExclusion([-1]);
         cars.setCollisionByExclusion([-1]);
         decoration.setCollisionByExclusion([-1]); // can maybe get rid of the other decoration layer by properly setting up collision with the tiles
         
-        this.player = new Player(this, 100, 100); // not sure what x and y are yet
+        this.player = new Player(this, 100, 100).setDepth(2); // not sure what x and y are yet
         
         // the only layers the player DOES NOT collide with are "ground" and "decoration_noclip"
         this.physics.add.collider(this.player, buildings, (player, tile) => {
 
         });
+        /*
         this.physics.add.collider(this.player, door, (player, tile) => {
             let house = "";
             switch (tile.index) {
@@ -69,6 +73,7 @@ export class City extends Phaser.Scene{
             }
             
         });
+        */
         this.physics.add.collider(this.player, cars, (player, tile) => {
 
         });
@@ -76,9 +81,9 @@ export class City extends Phaser.Scene{
 
         });
 
-        this.cameras.main.startFollow(this.player, true);
-        this.cameras.main.setDeadzone(100,100);
-        this.cameras.main.setZoom(1.5);
+        // this.cameras.main.startFollow(this.player, true);
+        // this.cameras.main.setDeadzone(100,100);
+        // this.cameras.main.setZoom(1.5);
 
     }
 
@@ -86,7 +91,7 @@ export class City extends Phaser.Scene{
         let dt = (time - this.last_time)/1000;
         this.last_time = time;
 
-        this.player.update();
+   //     this.player.update();
         
     }
 
