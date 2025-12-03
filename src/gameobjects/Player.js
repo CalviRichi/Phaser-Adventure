@@ -3,7 +3,7 @@ import { Inventory } from "./Inventory.js";
 export class Player extends Phaser.Physics.Arcade.Sprite{
     //this is to preload images/sprites so animations can be made here
     static preload(scene){
-
+     
     }
 
     //actually create the animations
@@ -13,6 +13,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
 
     constructor(scene, x, y){
 
+        super(scene, x, y, "player");
         /*
         The player will take in whatever state that the inventory provides it
         */

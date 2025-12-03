@@ -9,7 +9,8 @@ export class City extends Phaser.Scene{
     preload(){
         this.load.image("urban1", "assets/urban1.png");
         this.load.image("urban2", "assets/urban2.png");
-        this.load.tilemapTiledJSON("city", "assets/basicCity.tmj");
+        this.load.image("player", "assets/Trollface.png");
+        this.load.tilemapTiledJSON("city", "assets/basicCity.tmj"); // works
     }
 
     create(){
@@ -21,19 +22,19 @@ export class City extends Phaser.Scene{
         const urban2 = this.map.addTilesetImage("urban2", "urban2");
         var tileset = [urban1, urban2];
 
-        var doors, cars, decoration, decoration_noclip, buildings, ground;
+        var door, cars, decoration, decoration_noclip, buildings, ground;
 
       //  const UI = scene.get("UI");
         
-        doors = this.map.createLayer("doors", tileset, 0, 0);
-        cars = this.map.createLayer("cars", tileset, 0, 0);
-        decoration = this.map.createLayer("decoration", tileset, 0, 0);
-        decoration_noclip = this.map.createLayer("decoration_noclip", tileset, 0,0);
-        buildings = this.map.createLayer("buildings", tileset, 0, 0);
-        ground = this.map.createLayer("ground", tileset, 0, 0);
+        door = this.map.createLayer("door", tileset);
+        cars = this.map.createLayer("cars", tileset);
+        decoration = this.map.createLayer("decoration", tileset);
+        decoration_noclip = this.map.createLayer("decoration_noclip", tileset);
+        buildings = this.map.createLayer("buildings", tileset);
+        ground = this.map.createLayer("ground", tileset);
 
         buildings.setCollisionByExclusion([-1]); 
-        doors.setCollisionByExclusion([-1]);
+        door.setCollisionByExclusion([-1]);
         cars.setCollisionByExclusion([-1]);
         decoration.setCollisionByExclusion([-1]); // can maybe get rid of the other decoration layer by properly setting up collision with the tiles
         
@@ -43,7 +44,7 @@ export class City extends Phaser.Scene{
         this.physics.add.collider(this.player, buildings, (player, tile) => {
 
         });
-        this.physics.add.collider(this.player, doors, (player, tile) => {
+        this.physics.add.collider(this.player, door, (player, tile) => {
             let house = "";
             switch (tile.index) {
                 case 309:
