@@ -13,15 +13,15 @@
             "scaleInDock": 5.5757
         },
         "apartment.tmj": {
-            "scale": 1.5,
-            "selectedLayer": 0,
+            "scale": 3,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 203.33333333333331,
-                "y": 99.66666666666669
+                "x": 180.66666666666666,
+                "y": 93.5
             }
         },
         "apartment.tmj#classSet": {
-            "scaleInDock": 1
+            "scaleInDock": 5.5
         },
         "apartment.tmj#indoor": {
             "scaleInDock": 1
@@ -30,7 +30,7 @@
             "scaleInDock": 1
         },
         "apartment.tmj#urban2": {
-            "scaleInDock": 0.75
+            "scaleInDock": 2
         },
         "basicCity.tmj": {
             "scale": 3,
@@ -91,11 +91,14 @@
         },
         "inventory.tmj": {
             "scale": 1.5,
-            "selectedLayer": 1,
+            "selectedLayer": 0,
             "viewCenter": {
                 "x": 343.3333333333333,
                 "y": 77.66666666666669
             }
+        },
+        "inventory.tmj#urban2": {
+            "scaleInDock": 1
         },
         "player_lair.tmj": {
             "scale": 3,
