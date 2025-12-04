@@ -7,6 +7,17 @@
         "": {
             "scaleInDock": 5.5757
         },
+        "apartment.tmj": {
+            "scale": 3,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": -36,
+                "y": 8.166666666666686
+            }
+        },
+        "apartment.tmj#urban2": {
+            "scaleInDock": 1
+        },
         "basicCity.tmj": {
             "scale": 3,
             "selectedLayer": 5,
@@ -50,7 +61,7 @@
             "scale": 1.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 631.3333333333333,
+                "x": 343.3333333333333,
                 "y": 77.66666666666669
             }
         },
