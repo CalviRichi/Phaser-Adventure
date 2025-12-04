@@ -38,7 +38,7 @@ export class City extends Phaser.Scene{
         buildings = this.map.createLayer("buildings", tileset).setDepth(1).setScale(this.MAPSCALE);
         ground = this.map.createLayer("ground", tileset).setDepth(0).setScale(this.MAPSCALE);
 
-     //   buildings.setCollisionByExclusion([-1]); 
+        buildings.setCollisionByExclusion([-1]); 
         door.setCollisionByExclusion([-1]);
         cars.setCollisionByExclusion([-1]);
         decoration.setCollisionByExclusion([-1]); // can maybe get rid of the other decoration layer by properly setting up collision with the tiles
@@ -52,7 +52,8 @@ export class City extends Phaser.Scene{
         
         this.physics.add.collider(this.player, door, (player, tile) => {
         //    console.log(tile.index);
-            if (tile.index == 310 || tile.index == 1506 || tile.index == 1435 || tile.index == 1436) {
+            
+            if ( player.enter && (tile.index == 310 || tile.index == 1506 || tile.index == 1435 || tile.index == 1436)) {
                 player.x -= 200;
             }
             /*
@@ -100,6 +101,9 @@ export class City extends Phaser.Scene{
         this.last_time = time;
 
         this.player.update();
+        if (this.player.enter) {
+            console.log("E pressed");
+        }
      //   console.log(this.player.x + ", " + this.player.y);
         
     }
