@@ -152,20 +152,56 @@
  "tileheight":16,
  "tilesets":[
         {
+         "columns":27,
          "firstgid":1,
-         "source":"urban1.tsx"
+         "image":"urban1.png",
+         "imageheight":305,
+         "imagewidth":458,
+         "margin":0,
+         "name":"urban1",
+         "spacing":1,
+         "tilecount":486,
+         "tileheight":16,
+         "tilewidth":16
         }, 
         {
+         "columns":37,
          "firstgid":487,
-         "source":"urban2.tsx"
+         "image":"urban2.png",
+         "imageheight":475,
+         "imagewidth":628,
+         "margin":0,
+         "name":"urban2",
+         "spacing":1,
+         "tilecount":1036,
+         "tileheight":16,
+         "tilewidth":16
         }, 
         {
+         "columns":14,
          "firstgid":1523,
-         "source":"interior2.tsx"
+         "image":"interior2\/Tiled_files\/Interior.png",
+         "imageheight":432,
+         "imagewidth":224,
+         "margin":0,
+         "name":"interior2",
+         "spacing":0,
+         "tilecount":378,
+         "tileheight":16,
+         "tilewidth":16
         }, 
         {
+         "columns":27,
          "firstgid":1901,
-         "source":"indoor.tsx"
+         "image":"kennyIndoor_transparent.png",
+         "imageheight":305,
+         "imagewidth":458,
+         "margin":0,
+         "name":"indoor",
+         "spacing":1,
+         "tilecount":486,
+         "tileheight":16,
+         "tilewidth":16
         }],
  "tilewidth":16,
  "type":"map",

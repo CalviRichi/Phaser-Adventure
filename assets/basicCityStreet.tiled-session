@@ -7,17 +7,27 @@
     "expandedProjectPaths": [
         "."
     ],
+    "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "": {
             "scaleInDock": 5.5757
         },
         "apartment.tmj": {
             "scale": 1.5,
-            "selectedLayer": -1,
+            "selectedLayer": 0,
             "viewCenter": {
                 "x": 203.33333333333331,
                 "y": 99.66666666666669
             }
+        },
+        "apartment.tmj#classSet": {
+            "scaleInDock": 1
+        },
+        "apartment.tmj#indoor": {
+            "scaleInDock": 1
+        },
+        "apartment.tmj#interior2": {
+            "scaleInDock": 1
         },
         "apartment.tmj#urban2": {
             "scaleInDock": 0.75
@@ -26,8 +36,8 @@
             "scale": 3,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 111.99999999999997,
-                "y": 96.16666666666667
+                "x": 155,
+                "y": 124.83333333333333
             }
         },
         "basicCity.tmj#urban1": {
@@ -37,6 +47,7 @@
             "scaleInDock": 5.5757
         },
         "classSet.tsx": {
+            "scaleInDock": 0.25,
             "scaleInEditor": 1
         },
         "doorsWindows.tsx": {
@@ -87,15 +98,27 @@
             }
         },
         "player_lair.tmj": {
-            "scale": 2,
-            "selectedLayer": 2,
+            "scale": 3,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": -163,
-                "y": -155.25
+                "x": 170.33333333333331,
+                "y": 130.16666666666663
             }
         },
+        "player_lair.tmj#indoor": {
+            "scaleInDock": 1
+        },
+        "player_lair.tmj#interior2": {
+            "scaleInDock": 1
+        },
+        "player_lair.tmj#urban1": {
+            "scaleInDock": 1
+        },
+        "player_lair.tmj#urban2": {
+            "scaleInDock": 1
+        },
         "urban1.tsx": {
-            "scaleInDock": 5.5,
+            "scaleInDock": 2,
             "scaleInEditor": 1
         },
         "urban2.tsx": {

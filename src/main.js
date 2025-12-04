@@ -1,6 +1,7 @@
 import { Title_Screen } from './scenes/Title_Screen.js';
 import { EndGame } from './scenes/EndGame.js';
 import { City } from "./scenes/City.js";
+import { Player_Lair } from "./scenes/Player_Lair.js";
 import { House_1 } from './scenes/House_1.js';
 import { House_2 } from './scenes/House_2.js';
 import { House_3 } from './scenes/House_3.js';
@@ -23,9 +24,14 @@ const config = {
         }
     },
     scene: [
-       // Title_Screen,
-        City, House_1, House_2, House_3, House_4,
-        UI,
+        //Title_Screen,
+        //UI,
+        //Player_Lair,
+        //City, 
+        House_1, 
+        House_2, 
+        House_3, 
+        House_4,
         EndGame
     ],
     scale: {

@@ -1,3 +1,4 @@
+//import { Cop } from "../gameobjects/Cop.js";
 import { Player } from "../gameobjects/Player.js";
 import { Bullet } from "../gameobjects/Bullet.js";
 
@@ -5,23 +6,30 @@ export class City extends Phaser.Scene{
     constructor(){
         super('City');
 
+        //---- VARIABLES ----
         //constant for scaling
-        this.MAPSCALE = 2.5;
+        this.MAPSCALE = 3.3;
+        //each tile is 16x16px, w = 17, h = 16
+        this.MAPHEIGHT = 16 * 16 * this.MAPSCALE;
+        this.MAPWIDTH = 16 * 17 * this.MAPSCALE;
     }
 
     preload(){
+        //----- BACKGROUND -----
         this.load.image("urban1", "assets/urban1.png");
         this.load.image("urban2", "assets/urban2.png");
-        this.load.image("player", "assets/Trollface.png");
         this.load.tilemapTiledJSON("city", "assets/basicCity.tmj"); // works
 
+        //------- PLAYER/CHARACTERS -----
         Player.preload(this);
+        //Cop.preload(this);
     }
 
     create(){
         this.last_time = 0; // copied from last project
         this.score = 0;
 
+        //------- BACKGROUND ------
         this.map = this.add.tilemap("city");
         const urban1 = this.map.addTilesetImage("urban1", "urban1");
         const urban2 = this.map.addTilesetImage("urban2", "urban2");
@@ -43,9 +51,12 @@ export class City extends Phaser.Scene{
         cars.setCollisionByExclusion([-1]);
         decoration.setCollisionByExclusion([-1]); // can maybe get rid of the other decoration layer by properly setting up collision with the tiles
         
+        //-------- PLAYER --------
         Player.createAnimations(this);
-        this.player = new Player(this, 300, 100).setDepth(2); // not sure what x and y are yet
-        this.player.setScale(2);
+        this.player = new Player(this, 300, 100).setDepth(4); // not sure what x and y are yet
+        this.player.setScale(3.3);
+        this.player.body.setSize(8, 9); //change hitbox size
+        this.player.setOffset(1.5, 5.5); //change hitbox loc
         // the only layers the player DOES NOT collide with are "ground" and "decoration_noclip"
         this.physics.add.collider(this.player, buildings, (player, tile) => {
            // console.log("building");
@@ -91,8 +102,10 @@ export class City extends Phaser.Scene{
 
         });
 
-        this.cameras.main.startFollow(this.player, true);
-        this.cameras.main.setDeadzone(100,100);
+        //---------- CAMERA STUFF --------
+        this.cameras.main.setBounds(0, 0, this.MAPWIDTH, this.MAPHEIGHT); //prevent camera from showing dead space
+        this.cameras.main.startFollow(this.player, true); //follow player
+        this.cameras.main.setDeadzone(75, 75); //bit of cushion around following the player
         this.cameras.main.setZoom(2);
 
     }
