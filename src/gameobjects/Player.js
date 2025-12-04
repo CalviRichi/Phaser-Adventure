@@ -182,40 +182,60 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         //statements to change animations
         if (this.clothing == "robber"){
             if (velocityX > 0){ //moving right
-
+                if (this.anims.currentAnim?.key !== 'robber_right'){ //check the animation isn't alr playing (helps it not crash)
+                    this.play('robber_right', true);
+                }
             }
             else if (velocityX < 0){ //moving left
-
+                if (this.anims.currentAnim?.key !== 'robber_left'){
+                    this.play( 'robber_left', true);
+                }
             }
             
-            if (velocityY > 0){ //moving up (i think??)
-
+            if (velocityY > 0){ //moving up (i think??) (so face backwards)
+                if (this.anims.currentAnim?.key !== 'robber_back'){
+                    this.play( 'robber_back', true);
+                }
             }
-            else if (velocityY < 0){ //moving down (i think??)
-
+            else if (velocityY < 0){ //moving down (i think??)(so face forwards)
+                if (this.anims.currentAnim?.key !== 'robber_front'){
+                    this.play( 'robber_front', true);
+                }
             }
       
             if (velocityX == 0 && velocityY == 0){ //not moving (idle)
-
+                if (this.anims.currentAnim?.key !== 'robber_idle'){
+                    this.play( 'robber_idle', true);
+                }
             }
         }
         else { //business costume
             if (velocityX > 0){ //moving right
-
+                if (this.anims.currentAnim?.key !== 'business_right'){
+                    this.play( 'business_right', true);
+                }
             }
             else if (velocityX < 0){ //moving left
-
+                if (this.anims.currentAnim?.key !== 'business_left'){
+                    this.play( 'business_left', true);
+                }
             }
             
             if (velocityY > 0){ //moving up (i think??)
-
+                if (this.anims.currentAnim?.key !== 'business_back'){
+                    this.play( 'business_back', true);
+                }
             }
             else if (velocityY < 0){ //moving down (i think??)
-
+                if (this.anims.currentAnim?.key !== 'business_front'){
+                    this.play( 'business_front', true);
+                }
             }
       
             if (velocityX == 0 && velocityY == 0){ //not moving (idle)
-
+                if (this.anims.currentAnim?.key !== 'business_idle'){
+                    this.play( 'business_idle', true);
+                }
             }
         }
 

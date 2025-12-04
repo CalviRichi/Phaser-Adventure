@@ -12,7 +12,7 @@
             "selectedLayer": 5,
             "viewCenter": {
                 "x": 111.99999999999997,
-                "y": 152.16666666666663
+                "y": 96.16666666666667
             }
         },
         "basicCity.tmj#urban1": {
@@ -23,10 +23,10 @@
         },
         "house_1.tmj": {
             "scale": 2,
-            "selectedLayer": 0,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": -46,
-                "y": 42.75
+                "x": -90,
+                "y": 11.25
             }
         },
         "interior2/Tiled_files/Interior1.tmx": {
