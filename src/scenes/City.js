@@ -31,35 +31,40 @@ export class City extends Phaser.Scene{
 
       //  const UI = scene.get("UI");
         
-        door = this.map.createLayer("door", tileset).setDepth(2).setScale(this.MAPSCALE);
+        door = this.map.createLayer("door", tileset).setDepth(3).setScale(this.MAPSCALE);
         cars = this.map.createLayer("cars", tileset).setDepth(2).setScale(this.MAPSCALE);
         decoration = this.map.createLayer("decoration", tileset).setDepth(2).setScale(this.MAPSCALE);
         decoration_noclip = this.map.createLayer("decoration_noclip", tileset).setDepth(2).setScale(this.MAPSCALE);
         buildings = this.map.createLayer("buildings", tileset).setDepth(1).setScale(this.MAPSCALE);
         ground = this.map.createLayer("ground", tileset).setDepth(0).setScale(this.MAPSCALE);
 
-        buildings.setCollisionByExclusion([-1]); 
+     //   buildings.setCollisionByExclusion([-1]); 
         door.setCollisionByExclusion([-1]);
         cars.setCollisionByExclusion([-1]);
         decoration.setCollisionByExclusion([-1]); // can maybe get rid of the other decoration layer by properly setting up collision with the tiles
         
-        this.player = new Player(this, 100, 100).setDepth(2); // not sure what x and y are yet
-      
+        this.player = new Player(this, 300, 100).setDepth(2); // not sure what x and y are yet
+        this.player.setScale(2);
         // the only layers the player DOES NOT collide with are "ground" and "decoration_noclip"
         this.physics.add.collider(this.player, buildings, (player, tile) => {
-
+           // console.log("building");
         });
-        /*
+        
         this.physics.add.collider(this.player, door, (player, tile) => {
+        //    console.log(tile.index);
+            if (tile.index == 310 || tile.index == 1506 || tile.index == 1435 || tile.index == 1436) {
+                player.x -= 200;
+            }
+            /*
             let house = "";
             switch (tile.index) {
                 case 309:
-                    house = "business";
+                    house = "business"; 310
                     break;
                 case 1019:
-                    house = "apartment";
+                    house = "apartment"; // 1506
                     break;
-                case 948: // 948 and 949 would do the same thing
+                case 948: // 948 and 949 would do the same thing // 1435 and 36
                     house = "market";
                     break;
                 case 949:
@@ -73,9 +78,10 @@ export class City extends Phaser.Scene{
                 // check if NPC home -> sell sequence
                 this.beginSale(house);
             }
+            */
             
         });
-        */
+        
         this.physics.add.collider(this.player, cars, (player, tile) => {
 
         });
@@ -83,9 +89,9 @@ export class City extends Phaser.Scene{
 
         });
 
-      //  this.cameras.main.startFollow(this.player, true);
-      //  this.cameras.main.setDeadzone(100,100);
-      //  this.cameras.main.setZoom(1.5);
+        this.cameras.main.startFollow(this.player, true);
+        this.cameras.main.setDeadzone(100,100);
+        this.cameras.main.setZoom(2);
 
     }
 
@@ -93,7 +99,7 @@ export class City extends Phaser.Scene{
         let dt = (time - this.last_time)/1000;
         this.last_time = time;
 
-   //     this.player.update();
+        this.player.update();
      //   console.log(this.player.x + ", " + this.player.y);
         
     }
