@@ -196,13 +196,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
             }
             
             if (velocityY > 0){ //moving up (i think??) (so face backwards)
-                if (this.anims.currentAnim?.key !== 'robber_back'){
-                    this.play( 'robber_back', true);
+                if (this.anims.currentAnim?.key !== 'rober_front'){
+                    this.play( 'robber_front', true);
                 }
             }
             else if (velocityY < 0){ //moving down (i think??)(so face forwards)
-                if (this.anims.currentAnim?.key !== 'robber_front'){
-                    this.play( 'robber_front', true);
+                if (this.anims.currentAnim?.key !== 'rober_back'){
+                    this.play( 'robber_back', true);
                 }
             }
       

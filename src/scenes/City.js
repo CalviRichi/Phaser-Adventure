@@ -43,6 +43,7 @@ export class City extends Phaser.Scene{
         cars.setCollisionByExclusion([-1]);
         decoration.setCollisionByExclusion([-1]); // can maybe get rid of the other decoration layer by properly setting up collision with the tiles
         
+        Player.createAnimations(this);
         this.player = new Player(this, 300, 100).setDepth(2); // not sure what x and y are yet
         this.player.setScale(2);
         // the only layers the player DOES NOT collide with are "ground" and "decoration_noclip"
