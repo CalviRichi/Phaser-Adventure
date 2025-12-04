@@ -4,8 +4,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
     //this is to preload images/sprites so animations can be made here
     static preload(scene){ //u need to call this for every scene u want a player in w/ "Player.preload(this);" in every scene's preload() 
         //robber costume spritesheets
-        scene.load.spritesheet('robberFront', 'assets/characters/robber_front.png', { frameWidth: 11, frameHeight: 15});
-        scene.load.spritesheet('robberRight', 'assets/characters/robber_right.png',);
+        scene.load.spritesheet('robberFront', 'assets/characters/robber_front.png', { frameWidth: 11, frameHeight: 15 });
+        scene.load.spritesheet('robberRight', 'assets/characters/robber_right.png', { frameWidth: 11, frameHeight: 15 });
+        scene.load.spritesheet('robberLeft', 'assets/characters/robber_left.png', { frameWidth: 11, frameHeight: 15 });
+        scene.load.spritesheet('robberBack', 'assets/characters/robber_back.png', { frameWidth: 11, frameHeight: 15 });
+
+        //business costume spritesheets
+        scene.load.spritesheet('businessFront', 'assets/characters/business_front.png', { frameWidth: 11, frameHeight: 15 });
+        scene.load.spritesheet('businessRight', 'assets/characters/business_right.png', { frameWidth: 11, frameHeight: 15 });
+        scene.load.spritesheet('businessLeft', 'assets/characters/business_left.png', { frameWidth: 11, frameHeight: 15 });
+        scene.load.spritesheet('businessBack', 'assets/characters/business_back.png', { frameWidth: 11, frameHeight: 15 });
     }
 
     //actually create the animations
@@ -36,6 +44,110 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
                 repeat: -1
             });
         }
+        if (!scene.anims.exists('robber_right')){
+            scene.anims.create({
+                key: 'robber_right',
+                frames: [
+                    { key: 'robberRight', frame: 0 },
+                    { key: 'robberRight', frame: 1 },
+                    { key: 'robberRight', frame: 0 },
+                    { key: 'robberRight', frame: 2 }
+                ],
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+        if (!scene.anims.exists('robber_left')){
+            scene.anims.create({
+                key: 'robber_left',
+                frames: [
+                    { key: 'robberLeft', frame: 0 },
+                    { key: 'robberLeft', frame: 1 },
+                    { key: 'robberLeft', frame: 0 },
+                    { key: 'robberLeft', frame: 2 }
+                ],
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+        if (!scene.anims.exists('robber_back')){
+            scene.anims.create({
+                key: 'robber_back',
+                frames: [
+                    { key: 'robberBack', frame: 0 },
+                    { key: 'robberBack', frame: 1 },
+                    { key: 'robberBack', frame: 0 },
+                    { key: 'robberBack', frame: 2 }
+                ], 
+                frameRate: 5, 
+                repeat: -1
+            });
+        }
+
+        //business costume animations
+        if (!scene.anims.exists('business_idle')){
+            scene.anims.create({
+                key: 'business_idle',
+                frames: [
+                    { key: 'businessFront', frame: 0 },
+                    { key: 'businessFront', frame: 2 }
+                ], 
+                frameRate: 5,
+                repeat: -1
+            }); 
+        }
+        if (!scene.anims.exists('business_front')){
+            scene.anims.create({
+                key: 'business_front',
+                frames: [
+                    { key: 'businessFront', frame: 0 },
+                    { key: 'businessFront', frame: 1 },
+                    { key: 'businessFront', frame: 0 },
+                    { key: 'businessFront', frame: 2 }
+                ], 
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+        if (!scene.anims.exists('business_right')){
+            scene.anims.create({
+                key: 'business_right',
+                frames: [
+                    { key: 'businessRight', frame: 0 },
+                    { key: 'businessRight', frame: 1 },
+                    { key: 'businessRight', frame: 0 },
+                    { key: 'businessRight', frame: 2 }
+                ], 
+                frameRate: 5, 
+                repeat: -1
+            });
+        }
+        if (!scene.anims.exists('business_left')){
+            scene.anims.create({
+                key: 'business_left',
+                frames: [
+                    { key: 'businessLeft', frame: 0 },
+                    { key: 'businessLeft', frame: 1 },
+                    { key: 'businessLeft', frame: 0 },
+                    { key: 'businessLeft', frame: 2 }
+                ], 
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+        if (!scene.anims.exists('business_back')){
+            scene.anims.create({
+                key: 'business_back',
+                frames: [
+                    { key: 'businessBack', frame: 0 },
+                    { key: 'businessBack', frame: 1 },
+                    { key: 'businessBack', frame: 0 },
+                    { key: 'businessBack', frame: 2 }
+                ],
+                frameRate: 5, 
+                repeat: -1
+            });
+        }
     }
 
     constructor(scene, x, y){
@@ -49,6 +161,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         this.scene = scene;
         this.x = x; this.y = y;
         this.clothing = "robber";
+        this.speed = 250; //used in update() for movement (change ## to change speed)
 
         //adding physics n world colliders to player sprite
         scene.physics.add.existing(this);
@@ -56,10 +169,72 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         this.setCollideWorldBounds(true);
         //play idle animation by default
         this.play('robber_idle');
+
+        //------- KEYBOARD INPUT ------
+        //detect keys here instead of in each scene
+        this.left = scene.input.keyboard.addKey('A');
+        this.right = scene.input.keyboard.addKey('D');
+        this.up = scene.input.keyboard.addKey('W');
+        this.down = scene.input.keyboard.addKey('S');
+    }
+
+    movement(velocityX, velocityY){ //for updating animations n stuff
+        //statements to change animations
+        if (this.clothing == "robber"){
+            if (velocityX > 0){ //moving right
+
+            }
+            else if (velocityX < 0){ //moving left
+
+            }
+            
+            if (velocityY > 0){ //moving up (i think??)
+
+            }
+            else if (velocityY < 0){ //moving down (i think??)
+
+            }
+      
+            if (velocityX == 0 && velocityY == 0){ //not moving (idle)
+
+            }
+        }
+        else { //business costume
+            if (velocityX > 0){ //moving right
+
+            }
+            else if (velocityX < 0){ //moving left
+
+            }
+            
+            if (velocityY > 0){ //moving up (i think??)
+
+            }
+            else if (velocityY < 0){ //moving down (i think??)
+
+            }
+      
+            if (velocityX == 0 && velocityY == 0){ //not moving (idle)
+
+            }
+        }
+
+        //update velocities
+        this.setVelocityX(velocityX);
+        this.setVelocityY(velocityY);
     }
 
     update() {
-        return;
+        //------ PLAYER MOVEMENT STUFF ------
+        let velocityX = 0; //left-right velocity
+        let velocityY = 0; //up-down velocity
+        if (this.left.isDown){ velocityX = -this.speed; }
+        else if (this.right.isDown){ velocityX = this.speed; }
+        if (this.up.isDown){ velocityY = -this.speed; } //the sign for speed might need to be flipped
+        else if (this.down.isDown){ velocityY = this.speed; }
+
+        //call to change animations n stuff
+        this.movement(velocityX, velocityY);
     }
 
 
