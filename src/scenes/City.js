@@ -171,14 +171,18 @@ export class City extends Phaser.Scene{
         // if (this.player.enter) {
         //     console.log("E pressed");
         // }
+        let UI = this.scene.get('UI');
         if (this.player.UI_on != this.last_UI_status) {
+            
             console.log("UI");
             this.scene.bringToTop('UI');
+            UI.on = true;
             this.dimmer.setVisible(true);
 
             if (this.last_UI_status) {
                 this.last_UI_status = false;
                 this.scene.sendToBack('UI');
+                UI.on = false;
                 this.dimmer.setVisible(false);
 
             }

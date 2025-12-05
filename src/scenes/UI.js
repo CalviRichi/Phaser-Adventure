@@ -25,6 +25,7 @@ export class UI extends Phaser.Scene {
         //infopopup should only show when player is hovering over an item in their inventory
         infoPopUp = this.inventoryMap.createLayer("info_popup", urban2).setScale(this.MAPSCALE);
 
+        this.on = false;
 
         inventory.x += 120;
         inventory.y -= 20.
@@ -32,20 +33,43 @@ export class UI extends Phaser.Scene {
         infoPopUp.y -= 20;
 
         this.input.on('pointerdown', (pointer) => {
+
+            if (!this.on) return;
+
             const worldX = pointer.worldX;
             const worldY = pointer.worldY;
             console.log(pointer.x + " " + pointer.y);
             const tile = this.inventoryMap.getTileAtWorldXY(pointer.x, pointer.y, true, null, 'peepeepoopoo');
-
+            // (3,4) to (7,11) are the valid inventory spots 
             if (tile) {
+                
                 console.log('Clicked tile:', tile.x, tile.y);
                 console.log('Tile index:', tile.index);
             }
         });
 
+        this.last_tile = null;
+
     }
     update(time) {
 
+            if (this.on) {
 
+            let pointer = this.input.activePointer;
+
+            const tile = this.inventoryMap.getTileAtWorldXY(pointer.x, pointer.y, true, null, 'peepeepoopoo');
+
+            if (tile && (tile == this.last_tile || this.last_tile == null)) {
+                if (tile.index == 113) {
+                    tile.tint = 0xbbbbbb;
+                }
+            }
+            else if (this.last_tile) {
+                this.last_tile.tint = 0xffffff;
+            }
+
+            this.last_tile = tile;
+        }
+        
     }
 }
