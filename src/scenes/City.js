@@ -118,16 +118,59 @@ export class City extends Phaser.Scene{
         this.cameras.main.setDeadzone(75, 75); //bit of cushion around following the player
         this.cameras.main.setZoom(2);
 
+        //------- KEYBOARD INPUT ------
+        this.e = this.input.keyboard.addKey('E');
+
+        //------- TEXT PROMPTS ------
+        //(using these in update())
+        this.lairDoorPrompt = this.add.text(100, 100, "hit E to use door", {
+            fontSize: '30px',
+            fontFamily: 'Lucida Console',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setAlpha(0).setDepth(7).setOrigin(0.5);
+
+        this.doorPrompt = this.add.text(100, 100, "hit E to start unlocking door", {
+            fontSize: '30px',
+            fontFamily: 'Lucida Console',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setAlpha(0).setDepth(7).setOrigin(0.5);
     }
 
     update(time){
         let dt = (time - this.last_time)/1000;
         this.last_time = time;
 
+        //call player update to allow movement/animation change
         this.player.update();
-        if (this.player.enter) {
-            console.log("E pressed");
+        //center coords of camera
+        this.cameraCenterX = this.cameras.main.scrollX + this.cameras.main.width / 2;
+        this.cameraCenterY = this.cameras.main.scrollY + this.cameras.main.height / 2;
+        //finding the tile number of where u r from the coords of player
+        this.tileX = this.map.worldToTileX(this.player.x);
+        this.tileY = this.map.worldToTileY(this.player.y + (this.player.height/2));
+        //lair door: (x: 15, y: 9)
+        if (this.tileX == 15 && this.tileY == 9){
+            this.lairDoorPrompt.setPosition(this.cameraCenterX, this.cameraCenterY);
+            this.lairDoorPrompt.setAlpha(1);
+            
+            //only listen for key presses if they're in the right area
+            if (Phaser.Input.Keyboard.JustDown(this.e)){
+                this.cameras.main.fadeOut(500, 0, 0, 0);
+                this.cameras.main.once('camerafadeoutcomplete', () => {
+                    this.scene.launch('Player_Lair');
+                    this.scene.pause('City');
+                });
+            }
         }
+        //apartment door: (x: 1, y: 10)
+
+        // if (this.player.enter) {
+        //     console.log("E pressed");
+        // }
         if (this.player.UI_on != this.last_UI_status) {
             console.log("UI");
             this.scene.bringToTop('UI');
@@ -144,6 +187,8 @@ export class City extends Phaser.Scene{
             }
         }
      //   console.log(this.player.x + ", " + this.player.y);
+
+        
         
     }
 

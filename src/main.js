@@ -26,8 +26,8 @@ const config = {
     scene: [
         //Title_Screen,
         //UI,
-        Player_Lair,
         City, 
+        Player_Lair,
         House_1, 
         House_2, 
         House_3, 

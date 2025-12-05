@@ -76,20 +76,20 @@ export class Player_Lair extends Phaser.Scene{
         //(using these in update())
         //start invisible, switch visibility in update, then switch again
         this.doorPrompt = this.add.text (100, 100, "hit E to use door", {
-            fontSize: '40px',
+            fontSize: '30px',
             fontFamily: 'Lucida Console',
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3
-        }).setAlpha(0).setDepth(7).setResolution(1).setOrigin(0.5);
+        }).setAlpha(0).setDepth(7).setOrigin(0.5);
 
         this.clothesPrompt = this.add.text(100, 100, "hit E to change outfit", {
-            fontSize: '40px',
+            fontSize: '30px',
             fontFamily: 'Lucida Console',
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3
-        }).setAlpha(0).setDepth(7).setResolution(1).setOrigin(0.5);
+        }).setAlpha(0).setDepth(7).setOrigin(0.5);
     }
 
     update(time){
@@ -112,8 +112,6 @@ export class Player_Lair extends Phaser.Scene{
 
             //only listen for key presses if theyre in the right area
             if (Phaser.Input.Keyboard.JustDown(this.e)){
-                //CHANGE SCENES OR SOMETHING
-                //IDKKKKKKK
                 this.cameras.main.fadeOut(500, 0, 0, 0);
                 this.cameras.main.once('camerafadeoutcomplete', () => {
                     this.scene.resume('City');
@@ -154,7 +152,5 @@ export class Player_Lair extends Phaser.Scene{
             this.doorPrompt.setAlpha(0);
             this.clothesPrompt.setAlpha(0);
         }
-
-        //by the changing area: (x: , y: )
     }
 }
