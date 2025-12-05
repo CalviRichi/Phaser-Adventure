@@ -161,7 +161,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         this.scene = scene;
         this.x = x; this.y = y;
         this.clothing = "robber";
-        this.speed = 250; //used in update() for movement (change ## to change speed)
+        this.speed = 220; //used in update() for movement (change ## to change speed)
 
         //adding physics n world colliders to player sprite
         scene.physics.add.existing(this);
@@ -185,7 +185,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
 
     movement(velocityX, velocityY){ //for updating animations n stuff
         //statements to change animations
+
+        // TODO: try to reduce shake in sprite while moving
+
         if (this.clothing == "robber"){
+
             if (velocityX > 0){ //moving right
                 if (this.anims.currentAnim?.key !== 'robber_right'){ //check the animation isn't alr playing (helps it not crash)
                     this.play('robber_right', true);
@@ -197,12 +201,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
                 }
             }
             
-            if (velocityY > 0){ //moving up (i think??) (so face backwards)
+            if (velocityY > 0 && velocityX == 0){ //moving up (i think??) (so face backwards)
                 if (this.anims.currentAnim?.key !== 'rober_front'){
                     this.play( 'robber_front', true);
                 }
             }
-            else if (velocityY < 0){ //moving down (i think??)(so face forwards)
+            else if (velocityY < 0 && velocityX == 0){ //moving down (i think??)(so face forwards)
                 if (this.anims.currentAnim?.key !== 'rober_back'){
                     this.play( 'robber_back', true);
                 }
