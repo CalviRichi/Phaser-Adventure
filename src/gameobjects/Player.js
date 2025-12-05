@@ -261,12 +261,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         //call to change animations n stuff
         this.movement(velocityX, velocityY);
 
-        if (Phaser.Input.Keyboard.JustDown(this.e)) {
-            this.enter = true;
-        }
-        else {
-            this.enter = false;
-        }
+        // if (Phaser.Input.Keyboard.JustDown(this.e)) {
+        //     this.enter = true;
+        // }
+        // else {
+        //     this.enter = false;
+        // }
 
         if (Phaser.Input.Keyboard.JustDown(this.inventory)) {
            
@@ -278,6 +278,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
             }
             
         }
+
+
     }
 
 

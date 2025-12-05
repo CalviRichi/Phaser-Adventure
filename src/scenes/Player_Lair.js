@@ -114,6 +114,14 @@ export class Player_Lair extends Phaser.Scene{
             if (Phaser.Input.Keyboard.JustDown(this.e)){
                 //CHANGE SCENES OR SOMETHING
                 //IDKKKKKKK
+                this.cameras.main.fadeOut(500, 0, 0, 0);
+                this.cameras.main.once('camerafadeoutcomplete', () => {
+                    this.scene.resume('City');
+                    if (this.player){
+                        this.player.destroy();
+                    }
+                    this.scene.stop('Player_Lair');
+                });
             }
         } 
         //by the clothesline: (x: 7-12, y: 8-10)
@@ -123,6 +131,22 @@ export class Player_Lair extends Phaser.Scene{
 
             if (Phaser.Input.Keyboard.JustDown(this.e)){
                 //CHANGE PLAYER COSTUME
+                if (this.player.clothing == "robber"){
+                    this.player.clothing = "business";
+                    this.player.setTexture("businessFront", 0);
+                }
+                else {
+                    this.player.clothing = "robber";
+                    this.player.setTexture("robberFront", 0);
+                }
+
+                //forcing to idle animations if the player doesn't move
+                if (this.player.clothing == "robber"){
+                    this.player.play("robber_idle", true);
+                }
+                else {
+                    this.player.play("business_idle", true);
+                }
             }
         }
         else {
