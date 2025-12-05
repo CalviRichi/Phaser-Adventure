@@ -96,7 +96,12 @@ export class Player_Lair extends Phaser.Scene{
         let dt = (time - this.last_time)/1000;
         this.last_time = time;
 
-        this.player.update();
+        if (this.player){
+            this.player.update();
+        }
+        else {
+            return;
+        }
 
         //finding center coords of camera so messages can be centered
         this.cameraCenterX = this.cameras.main.scrollX + this.cameras.main.width / 2;
