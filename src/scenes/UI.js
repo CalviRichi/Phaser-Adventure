@@ -34,8 +34,8 @@ export class UI extends Phaser.Scene {
         this.input.on('pointerdown', (pointer) => {
             const worldX = pointer.worldX;
             const worldY = pointer.worldY;
-
-            const tile = map.getTileAtWorldXY(worldX, worldY, true, this.cameras.main, 'InventoryLayer');
+            console.log(pointer.x + " " + pointer.y);
+            const tile = this.inventoryMap.getTileAtWorldXY(pointer.x, pointer.y, true, null, 'peepeepoopoo');
 
             if (tile) {
                 console.log('Clicked tile:', tile.x, tile.y);
