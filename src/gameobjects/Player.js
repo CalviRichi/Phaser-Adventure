@@ -178,6 +178,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         this.down = scene.input.keyboard.addKey('S');
         this.e = scene.input.keyboard.addKey('E');
         this.enter = false;
+        this.inventory = scene.input.keyboard.addKey("I");
+        this.UI_on = false;
 
     }
 
@@ -258,11 +260,23 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
 
         //call to change animations n stuff
         this.movement(velocityX, velocityY);
+
         if (Phaser.Input.Keyboard.JustDown(this.e)) {
             this.enter = true;
         }
         else {
             this.enter = false;
+        }
+
+        if (Phaser.Input.Keyboard.JustDown(this.inventory)) {
+           
+            if (this.UI_on) {
+                this.UI_on = false;
+            }
+            else {
+                this.UI_on = true;
+            }
+            
         }
     }
 

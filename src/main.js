@@ -25,9 +25,9 @@ const config = {
     },
     scene: [
         //Title_Screen,
-        //UI,
-        Player_Lair,
-        //City, 
+        UI,
+      //  Player_Lair,
+        City, 
         House_1, 
         House_2, 
         House_3, 
@@ -42,7 +42,7 @@ const config = {
 
 const game = new Phaser.Game(config);
 
-//game.scene.start("UI"); // launch is persistent 
-//game.scene.start("City");
+game.scene.start("UI"); // launch is persistent 
+game.scene.start("City");
 //game.scene.moveAbove("UI","City");
 

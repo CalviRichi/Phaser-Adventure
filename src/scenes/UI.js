@@ -20,11 +20,32 @@ export class UI extends Phaser.Scene {
         this.inventoryMap = this.add.tilemap("inventory");
         const urban2 = this.inventoryMap.addTilesetImage("urban2", "urban2");
         var inventory, infoPopUp;
+        this.inventory = new Inventory();
         inventory = this.inventoryMap.createLayer("peepeepoopoo", urban2).setScale(this.MAPSCALE);
         //infopopup should only show when player is hovering over an item in their inventory
         infoPopUp = this.inventoryMap.createLayer("info_popup", urban2).setScale(this.MAPSCALE);
+
+
+        inventory.x += 120;
+        inventory.y -= 20.
+        infoPopUp.x += 120;
+        infoPopUp.y -= 20;
+
+        this.input.on('pointerdown', (pointer) => {
+            const worldX = pointer.worldX;
+            const worldY = pointer.worldY;
+
+            const tile = map.getTileAtWorldXY(worldX, worldY, true, this.cameras.main, 'InventoryLayer');
+
+            if (tile) {
+                console.log('Clicked tile:', tile.x, tile.y);
+                console.log('Tile index:', tile.index);
+            }
+        });
+
     }
     update(time) {
+
 
     }
 }

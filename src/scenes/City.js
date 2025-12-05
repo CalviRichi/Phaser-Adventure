@@ -29,6 +29,16 @@ export class City extends Phaser.Scene{
         this.last_time = 0; // copied from last project
         this.score = 0;
 
+        this.last_UI_status = false;
+
+        // In GameScene.create()
+        this.dimmer = this.add.rectangle(0, 0, this.scale.width, this.scale.height, 0x000000, 0.5)
+            .setOrigin(0)
+            .setScrollFactor(0)
+            .setDepth(9999)
+            .setVisible(false);
+
+
         //------- BACKGROUND ------
         this.map = this.add.tilemap("city");
         const urban1 = this.map.addTilesetImage("urban1", "urban1");
@@ -117,6 +127,21 @@ export class City extends Phaser.Scene{
         this.player.update();
         if (this.player.enter) {
             console.log("E pressed");
+        }
+        if (this.player.UI_on != this.last_UI_status) {
+            console.log("UI");
+            this.scene.bringToTop('UI');
+            this.dimmer.setVisible(true);
+
+            if (this.last_UI_status) {
+                this.last_UI_status = false;
+                this.scene.sendToBack('UI');
+                this.dimmer.setVisible(false);
+
+            }
+            else {
+                this.last_UI_status = true;
+            }
         }
      //   console.log(this.player.x + ", " + this.player.y);
         
