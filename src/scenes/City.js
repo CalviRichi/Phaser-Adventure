@@ -169,7 +169,7 @@ export class City extends Phaser.Scene{
 
                     this.scene.run('Player_Lair');
      
-                    this.scene.pause('City');
+                    this.scene.sleep('City');
                     this.scene.get('Player_Lair').cameras.main.fadeIn(500,0,0);
                 });
                 
@@ -188,12 +188,14 @@ export class City extends Phaser.Scene{
             
             console.log("UI");
             this.scene.bringToTop('UI');
+            UI.scene.setVisible(true);
             UI.on = true;
             this.dimmer.setVisible(true);
 
             if (this.last_UI_status) {
                 this.last_UI_status = false;
                 this.scene.sendToBack('UI');
+                UI.scene.setVisible(false);
                 UI.on = false;
                 this.dimmer.setVisible(false);
 

@@ -124,10 +124,11 @@ export class Player_Lair extends Phaser.Scene{
                     //if (this.player){
                     //    this.player.destroy();
                     //}
-                    this.scene.resume('City');
-                    
-                    this.scene.pause('Player_Lair');
+                    this.scene.run('City');
+                  
+                    this.scene.sleep('Player_Lair');
                     this.scene.get('City').cameras.main.fadeIn(500,0,0);
+                    
                 });
             }
         } 
