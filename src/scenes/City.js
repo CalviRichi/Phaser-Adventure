@@ -159,12 +159,24 @@ export class City extends Phaser.Scene{
             
             //only listen for key presses if they're in the right area
             if (Phaser.Input.Keyboard.JustDown(this.e)){
+
+
                 this.cameras.main.fadeOut(500, 0, 0, 0);
+
+
                 this.cameras.main.once('camerafadeoutcomplete', () => {
-                    this.scene.launch('Player_Lair');
+
+
+                    this.scene.run('Player_Lair');
+     
                     this.scene.pause('City');
+                    this.scene.get('Player_Lair').cameras.main.fadeIn(500,0,0);
                 });
+                
             }
+        }
+        else {
+            this.lairDoorPrompt.setAlpha(0);
         }
         //apartment door: (x: 1, y: 10)
 

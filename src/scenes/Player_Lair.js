@@ -117,13 +117,17 @@ export class Player_Lair extends Phaser.Scene{
 
             //only listen for key presses if theyre in the right area
             if (Phaser.Input.Keyboard.JustDown(this.e)){
+
                 this.cameras.main.fadeOut(500, 0, 0, 0);
+
                 this.cameras.main.once('camerafadeoutcomplete', () => {
+                    //if (this.player){
+                    //    this.player.destroy();
+                    //}
                     this.scene.resume('City');
-                    if (this.player){
-                        this.player.destroy();
-                    }
-                    this.scene.stop('Player_Lair');
+                    
+                    this.scene.pause('Player_Lair');
+                    this.scene.get('City').cameras.main.fadeIn(500,0,0);
                 });
             }
         } 

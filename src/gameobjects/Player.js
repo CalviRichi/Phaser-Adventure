@@ -230,18 +230,26 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
                 }
             }
             
-            if (velocityY > 0){ //moving up (i think??)
-                if (this.anims.currentAnim?.key !== 'business_back'){
-                    this.play( 'business_back', true);
-                }
-            }
-            else if (velocityY < 0){ //moving down (i think??)
+            if (velocityY > 0 && velocityX == 0){ //moving up (i think??)
                 if (this.anims.currentAnim?.key !== 'business_front'){
                     this.play( 'business_front', true);
                 }
             }
+            else if (velocityY < 0 && velocityX == 0){ //moving down (i think??)
+                if (this.anims.currentAnim?.key !== 'business_back'){
+                    this.play( 'business_back', true);
+                }
+            }
       
             if (velocityX == 0 && velocityY == 0){ //not moving (idle)
+
+
+                /*
+                IMO, it would look a little better if there was a front idle and a back idle
+                depending on which direction the player was last facing, but it's ok to not 
+                bother with that for now 
+                */
+
                 if (this.anims.currentAnim?.key !== 'business_idle'){
                     this.play( 'business_idle', true);
                 }
