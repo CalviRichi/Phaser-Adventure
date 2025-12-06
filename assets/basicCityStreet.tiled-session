@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "inventory.tmj",
+    "activeFile": "basicCity.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -48,7 +48,7 @@
         },
         "classSet.tsx": {
             "scaleInDock": 0.25,
-            "scaleInEditor": 1
+            "scaleInEditor": 0.75
         },
         "doorsWindows.tsx": {
             "scaleInDock": 2,
@@ -67,9 +67,11 @@
             }
         },
         "indoor.tsx": {
+            "scaleInDock": 2,
             "scaleInEditor": 2
         },
         "interior2.tsx": {
+            "scaleInDock": 0.75,
             "scaleInEditor": 1.5
         },
         "interior2/Tiled_files/Interior1.tmx": {
@@ -125,7 +127,7 @@
             "scaleInEditor": 1
         },
         "urban2.tsx": {
-            "scaleInDock": 3,
+            "scaleInDock": 2,
             "scaleInEditor": 1
         }
     },
@@ -136,24 +138,30 @@
     "map.tileHeight": 16,
     "map.tileWidth": 16,
     "openFiles": [
-        "urban1.tsx",
         "basicCity.tmj",
+        "inventory.tmj",
+        "apartment.tmj",
+        "player_lair.tmj",
+        "interior2.tsx",
+        "indoor.tsx",
+        "classSet.tsx",
         "urban2.tsx",
-        "inventory.tmj"
+        "urban1.tsx"
     ],
     "project": "basicCityStreet.tiled-project",
     "recentFiles": [
-        "player_lair.tmj",
         "urban1.tsx",
         "urban2.tsx",
-        "indoor.tsx",
         "classSet.tsx",
+        "indoor.tsx",
+        "interior2.tsx",
+        "player_lair.tmj",
+        "apartment.tmj",
+        "inventory.tmj",
+        "basicCity.tmj",
         "grass.tsx",
         "doorsWindows.tsx",
-        "interior2.tsx",
-        "interior2/Tiled_files/Interior1.tmx",
-        "basicCity.tmj",
-        "inventory.tmj"
+        "interior2/Tiled_files/Interior1.tmx"
     ],
     "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
     "tileset.lastUsedFormat": "tsx",
