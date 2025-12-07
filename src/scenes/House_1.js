@@ -20,6 +20,7 @@ export class House_1 extends Phaser.Scene {
         this.load.tilemapTiledJSON("house_1", "assets/apartment.tmj");
 
         //----- PLAYER/CHARACTERS ------
+        Player.preload(this);
     }
     create() {
         //------- BACKGROUND ------
@@ -38,8 +39,82 @@ export class House_1 extends Phaser.Scene {
         decoration = this.map.createLayer("decoration", tileset).setDepth(2).setScale(this.MAPSCALE);
         tableDecor = this.map.createLayer("table decor", tileset).setDepth(3).setScale(this.MAPSCALE);
         door = this.map.createLayer("door", tileset).setDepth(3).setScale(this.MAPSCALE);
+
+        //set up map collisions
+        walls.setCollisionByExclusion([-1]);
+        solidDecor.setCollisionByExclusion([-1]);
+        door.setCollisionByExclusion([-1]);
+
+        //------ PLAYER ------
+        Player.createAnimations(this);
+        //set player to spawn next to door
+        const playerSpawn = this.map.tileToWorldXY(6, 3);
+        this.player = new Player(this, playerSpawn.x, playerSpawn.y).setDepth(4).setScale(3.3);
+        this.player.setSize(8, 9);
+        this.player.setOffset(1.5, 5.5);
+
+        //add collisions between player + game objects
+        this.physics.add.collider(this.player, walls);
+        this.physics.add.collider(this.player, solidDecor);
+        this.physics.add.collider(this.player, door);
+
+        //------ CAMERA STUFF -------
+        this.cameras.main.setBounds(0, 0, this.MAPWIDTH, this.MAPHEIGHT);
+        this.cameras.main.setFollow(this.player, true);
+        this.cameras.main.setDeadzone(75, 75);
+        this.cameras.main.setZoom(2);
+
+        //------- KEYBOARD INPUT ------
+        this.e = this.input.keyboard.addKey('E');
+
+        //--------- VARIABLES -----
+        this.last_time = 0;
+
+        //------ TEXT PROMPTS ----
+        //(using these in update())
+        //start invisible, switch visibility in update, then switch again
+        this.doorPrompt = this.add.text (100, 100, "hit E to use door", {
+            fontSize: '30px',
+            fontFamily: 'Lucida Console',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setAlpha(0).setDepth(7).setOrigin(0.5);
     }
     update(time) {
+        let dt = (time - this.last_time)/1000;
+        this.last_time = time;
 
+        if (this.player){
+            this.player.update();
+        }
+        else { return; }
+
+        //finding center coords of camera so messages can be centered
+        this.cameraCenterX = this.cameras.main.scrollX + this.cameras.main.width / 2;
+        this.cameraCenterY = this.cameras.main.scrollY + this.cameras.main.height / 2;
+        //finding the tile number of where u r from the coords of where u are
+        this.tileX = this.lair.worldToTileX(this.player.x);
+        this.tileY = this.lair.worldToTileY(this.player.y + (this.player.height/2));
+
+        //by the door: (x: 6, y: 3)
+        if (this.tileX == 6 && this.tileY == 3){
+            this.doorPrompt.setPosition(this.cameraCenterX, this.cameraCenterY);
+            this.doorPrompt.setAlpha(1);
+
+            if (Phaser.Input.Keyboard.JustDown(this.e)){
+                this.cameras.main.fadeOut(500, 0, 0, 0);
+
+                this.cameras.main.once('camerafadeoutcomplete', () => {
+                    this.scene.run('City');
+                    
+                    this.scene.sleep('Player_Lair');
+                    this.scene.get('City').cameras.main.fadeIn(500, 0, 0);
+                });
+            }
+        }
+        else {
+            this.doorPrompt.setAlpha(0);
+        }
     }
 }

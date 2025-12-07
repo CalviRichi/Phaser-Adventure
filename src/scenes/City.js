@@ -206,11 +206,7 @@ export class City extends Phaser.Scene{
             
             //only listen for key presses if they're in the right area
             if (Phaser.Input.Keyboard.JustDown(this.e)){
-
-
                 this.cameras.main.fadeOut(500, 0, 0, 0);
-
-
                 this.cameras.main.once('camerafadeoutcomplete', () => {
 
 
@@ -222,8 +218,23 @@ export class City extends Phaser.Scene{
                 
             }
         }
+        //house_1: (x: 1, y: 10)
+        else if (this.tileX == 1 && this.tileY == 10){
+            this.doorPrompt.setPosition(this.cameraCenterX, this.cameraCenterY);
+            this.doorPrompt.setAlpha(1);
+            if (Phaser.Input.Keyboard.JustDown(this.e)){
+                this.cameras.main.fadeOut(500, 0, 0, 0);
+                this.cameras.main.once('camerafadeoutcomplete', () => {
+                    this.scene.run('House_1');
+                    
+                    this.scene.sleep('City');
+                    this.scene.get('House_1').cameras.main.fadeIn(500, 0, 0);
+                });
+            }
+        }
         else {
             this.lairDoorPrompt.setAlpha(0);
+            this.doorPrompt.setAlpha(0);
         }
         //apartment door: (x: 1, y: 10)
 
