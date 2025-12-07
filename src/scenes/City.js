@@ -1,4 +1,4 @@
-//import { Cop } from "../gameobjects/Cop.js";
+import { Cop } from "../gameobjects/Cop.js";
 import { Player } from "../gameobjects/Player.js";
 import { Bullet } from "../gameobjects/Bullet.js";
 
@@ -12,6 +12,14 @@ export class City extends Phaser.Scene{
         //each tile is 16x16px, w = 17, h = 16
         this.MAPHEIGHT = 16 * 16 * this.MAPSCALE;
         this.MAPWIDTH = 16 * 17 * this.MAPSCALE;
+
+        //variables for cop spawning
+        this.copSpawnTimer = null; //to keep track of time for the spawning
+        this.spawnRate = 5000; //how often they will spawn (30000 = 30 seconds apart)
+        this.maxCops = 10; //use this variable to limit how many cops can be spawned in at any one time (if needed)
+        //this.copAttackRate = 5000; //how often they can throw a punch
+        this.copLoc = "right"; //to know which side of the street to spawn them on
+        this.coordx = 0; //to know which coord locations to spawn them at
     }
 
     preload(){
@@ -22,7 +30,7 @@ export class City extends Phaser.Scene{
 
         //------- PLAYER/CHARACTERS -----
         Player.preload(this);
-        //Cop.preload(this);
+        Cop.preload(this);
     }
 
     create(){
@@ -61,6 +69,14 @@ export class City extends Phaser.Scene{
         cars.setCollisionByExclusion([-1]);
         decoration.setCollisionByExclusion([-1]); // can maybe get rid of the other decoration layer by properly setting up collision with the tiles
         
+        //------- COPARONIES -----
+        Cop.createAnimations(this);
+        this.cop_group = this.add.group("cops");
+        //give player a sec when the scene starts before they start spawning
+        this.time.delayedCall(5000, () => {
+            this.startSpawning();
+        });
+
         //-------- PLAYER --------
         Player.createAnimations(this);
         this.player = new Player(this, 300, 100).setDepth(4); // not sure what x and y are yet
@@ -138,6 +154,37 @@ export class City extends Phaser.Scene{
             stroke: '#000000',
             strokeThickness: 3
         }).setAlpha(0).setDepth(7).setOrigin(0.5);
+    }
+
+    //this is for spawning cops in (this is just a looping timing function basically)
+    startSpawning(){
+        this.spawnCop();
+        //set up timer
+        this.copSpawnTimer = this.time.addEvent({
+            delay: this.spawnRate, //variable from constructor
+            callback: this.spawnCop, //call other function
+            callbackScope: this, //after calling function, return to this loop
+            loop: true
+        });
+    }
+    //this actually spawns in the cop
+    spawnCop(){
+        //cut off from spawning too many enemies at once (value can be changed in constructor)
+        if (this.cop_group.getChildren().length >= this.maxCops){
+            return;
+        }
+        //switching sides of the street that cops spawn on
+        //left side: tile=5 right side: tile=12
+        if (this.copLoc == "left"){
+            this.copLoc = "right"; //switch
+            this.coordx = 12 * 16 * this.MAPSCALE; //coord location conversion = tile * tileSize * scale
+        }
+        else {
+            this.copLoc = "left";
+            this.coordx = 5 * 16 * this.MAPSCALE;
+        }
+        const cop = new Cop(this, this.coordx, -10); //y spawn slightly off-screen
+        this.cop_group.add(cop);
     }
 
     update(time){
