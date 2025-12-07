@@ -1,4 +1,4 @@
-export class Cop extends Phaser.GameObjects.PathFollower {
+export class Cop extends Phaser.Physics.Arcade.Sprite {
     //going for the same setup as player class
     static preload(scene){
         scene.load.spritesheet('copFront', 'assets/characters/cop_front.png', { frameWidth: 12, frameHeight: 15 });
@@ -76,33 +76,15 @@ export class Cop extends Phaser.GameObjects.PathFollower {
         //adding in cop sprite
         scene.physics.add.existing(this);
         scene.add.existing(this);
-
         this.setScale(3.3);
+        this.body.setSize(9, 10);
+        this.setOffset(1.5, 4);
 
-        //create path for cop to follow
-        this.createPath();
+        //make cop follow a path
+        this.setVelocityY(this.speed);
 
         //play basic animation
         this.play('cop_front');
-
-        //make it start following the path
-        this.startFollow({
-            duration: this.calculateDuration(), //calculate how long it should follow the path based off speed
-            onComplete: () => {
-                this.destroy();
-            }
-        });
-    }
-
-    createPath(){
-        const path = new Phaser.Curves.Path(this.x, this.y);
-        path.lineTo(this.x, this.endY);
-        this.setPath(path);
-    }
-
-    calculateDuration(){
-        const distance = this.endY - this.y;
-        return (distance/this.speed) * 1000;
     }
 
     destroy(){ //method to destroy cop after it goes off screen
@@ -113,6 +95,9 @@ export class Cop extends Phaser.GameObjects.PathFollower {
     }
 
     update() {
-        
+        //if cop goes off screen, destroy it
+        if (this.y > this.endY){
+            this.destroy();
+        }
     }
 }
