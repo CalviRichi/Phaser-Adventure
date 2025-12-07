@@ -5,6 +5,7 @@ export class Inventory {
     static SIZE = 40; // 5 x 8
     static MAT_X = 5;
     static MAT_Y = 8;
+
     constructor() {
 
         this.itemMatrix = [ // for now 5 x 8
@@ -29,8 +30,8 @@ export class Inventory {
      * @returns {void}
      */
     add(item, coord){ // item is an object
-        item.offSet.x = coord.x;
-        item.offSet.y = coord.y;
+        item.origin.x = coord.x;
+        item.origin.y = coord.y;
 
         let itemVecX = item.vec.x + coord.x;
         let itemVecY = item.vec.y + coord.y;
@@ -52,8 +53,8 @@ export class Inventory {
 
         // update the weight
         let count = 0;
-        for (let i = 0; i < MAT_Y; i++) {
-            for (let j = 0; j < MAT_X; j++) {
+        for (let i = 0; i < Inventory.MAT_Y; i++) {
+            for (let j = 0; j < Inventory.MAT_X; j++) {
                 if (this.itemMatrix[i][j]) count++;
             
             }
@@ -77,17 +78,17 @@ export class Inventory {
                 break;
             }
         }
-        for (let i = toBeRemoved.offSet.y; i < toBeRemoved.vec.y + toBeRemoved.offSet.y; i++) {
-            for (let j = toBeRemoved.offSet.x; j < toBeRemoved.vec.x + toBeRemoved.offSet.x; j++) {
+        for (let i = toBeRemoved.origin.y; i < toBeRemoved.vec.y + toBeRemoved.origin.y; i++) {
+            for (let j = toBeRemoved.origin.x; j < toBeRemoved.vec.x + toBeRemoved.origin.x; j++) {
                 this.itemMatrix[i][j] = 0;
             }
         }
-        toBeRemoved.offSet.x = 0; toBeRemoved.offSet.y = 0;
+        toBeRemoved.origin.x = 0; toBeRemoved.origin.y = 0;
 
         // update the weight
         let count = 0;
-        for (let i = 0; i < MAT_Y; i++) {
-            for (let j = 0; j < MAT_X; j++) {
+        for (let i = 0; i < Inventory.MAT_Y; i++) {
+            for (let j = 0; j < Inventory.MAT_X; j++) {
                 if (this.itemMatrix[i][j]) count++;
             
             }
