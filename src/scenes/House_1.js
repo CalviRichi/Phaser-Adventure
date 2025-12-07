@@ -60,7 +60,7 @@ export class House_1 extends Phaser.Scene {
 
         //------ CAMERA STUFF -------
         this.cameras.main.setBounds(0, 0, this.MAPWIDTH, this.MAPHEIGHT);
-        this.cameras.main.setFollow(this.player, true);
+        this.cameras.main.startFollow(this.player, true);
         this.cameras.main.setDeadzone(75, 75);
         this.cameras.main.setZoom(2);
 
@@ -86,16 +86,17 @@ export class House_1 extends Phaser.Scene {
         this.last_time = time;
 
         if (this.player){
+            
             this.player.update();
         }
-        else { return; }
+   //     else { return; }
 
         //finding center coords of camera so messages can be centered
         this.cameraCenterX = this.cameras.main.scrollX + this.cameras.main.width / 2;
         this.cameraCenterY = this.cameras.main.scrollY + this.cameras.main.height / 2;
         //finding the tile number of where u r from the coords of where u are
-        this.tileX = this.lair.worldToTileX(this.player.x);
-        this.tileY = this.lair.worldToTileY(this.player.y + (this.player.height/2));
+        this.tileX = this.map.worldToTileX(this.player.x);
+        this.tileY = this.map.worldToTileY(this.player.y + (this.player.height/2));
 
         //by the door: (x: 6, y: 3)
         if (this.tileX == 6 && this.tileY == 3){
@@ -108,7 +109,7 @@ export class House_1 extends Phaser.Scene {
                 this.cameras.main.once('camerafadeoutcomplete', () => {
                     this.scene.run('City');
                     
-                    this.scene.sleep('Player_Lair');
+                    this.scene.sleep('House_1');
                     this.scene.get('City').cameras.main.fadeIn(500, 0, 0);
                 });
             }

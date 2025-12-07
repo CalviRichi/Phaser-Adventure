@@ -27,6 +27,8 @@ export class UI extends Phaser.Scene {
 
         this.on = false;
 
+        this.scene.setVisible(false);
+
         inventory.x += 120;
         inventory.y -= 20.
         infoPopUp.x += 120;
