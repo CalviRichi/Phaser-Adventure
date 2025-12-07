@@ -23,6 +23,10 @@ export class House_1 extends Phaser.Scene {
         Player.preload(this);
     }
     create() {
+
+        this.sys.events.on('wake', () => {
+            this.player.clothing = this.scene.get('UI').clothing;
+        });
         //------- BACKGROUND ------
         this.map = this.add.tilemap("house_1");
         const urban2 = this.map.addTilesetImage("urban2", "urban2"); //1st val is tileset name in tiled, 2nd val is name of loaded image
@@ -49,7 +53,8 @@ export class House_1 extends Phaser.Scene {
         Player.createAnimations(this);
         //set player to spawn next to door
         const playerSpawn = this.map.tileToWorldXY(6, 3);
-        this.player = new Player(this, playerSpawn.x, playerSpawn.y).setDepth(4).setScale(3.3);
+        const UI = this.scene.get('UI');
+        this.player = new Player(this, playerSpawn.x, playerSpawn.y, UI.clothing).setDepth(4).setScale(3.3);
         this.player.setSize(8, 9);
         this.player.setOffset(1.5, 5.5);
 

@@ -27,6 +27,8 @@ export class UI extends Phaser.Scene {
 
         this.on = false;
 
+        this.clothing = 'robber';
+
         this.scene.setVisible(false);
 
         inventory.x += 120;
@@ -37,6 +39,8 @@ export class UI extends Phaser.Scene {
         this.input.on('pointerdown', (pointer) => {
 
             if (!this.on) return;
+
+         
 
             const worldX = pointer.worldX;
             const worldY = pointer.worldY;

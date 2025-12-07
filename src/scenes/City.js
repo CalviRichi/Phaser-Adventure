@@ -39,6 +39,14 @@ export class City extends Phaser.Scene{
 
         this.last_UI_status = false;
 
+        this.sys.events.on('wake', () => {
+           this.player.clothing = this.scene.get("UI").clothing;
+           /*
+           this is the best place for updating all of the player info, because it runs every transition
+
+           */
+        });
+
         // In GameScene.create()
         this.dimmer = this.add.rectangle(0, 0, this.scale.width, this.scale.height, 0x000000, 0.5)
             .setOrigin(0)
@@ -79,7 +87,7 @@ export class City extends Phaser.Scene{
 
         //-------- PLAYER --------
         Player.createAnimations(this);
-        this.player = new Player(this, 300, 100).setDepth(4); // not sure what x and y are yet
+        this.player = new Player(this, 300, 100, 'robber').setDepth(4); // not sure what x and y are yet
         this.player.setScale(3.3);
         this.player.body.setSize(8, 9); //change hitbox size
         this.player.setOffset(1.5, 5.5); //change hitbox loc

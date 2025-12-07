@@ -150,9 +150,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         }
     }
 
-    constructor(scene, x, y){
+    constructor(scene, x, y, outfit='robber'){
 
-        super(scene, x, y, 'robberFront', 0); //start w frame 0 of robber front by default
+        let spriteOutfit;
+        if (outfit == "robber") {
+            spriteOutfit = 'robberFront';
+        }
+        else if (outfit == 'business') {
+            spriteOutfit = "businessFront";
+        }
+        super(scene, x, y, spriteOutfit, 0); //start w frame 0 of robber front by default
         /*
         The player will take in whatever state that the inventory provides it
         */
@@ -160,7 +167,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
 
         this.scene = scene;
         this.x = x; this.y = y;
-        this.clothing = "robber";
+
+        this.clothing = outfit; // default = "robber"
+
+
         this.speed = 220; //used in update() for movement (change ## to change speed)
 
         //adding physics n world colliders to player sprite
@@ -168,7 +178,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         scene.add.existing(this);
         this.setCollideWorldBounds(true);
         //play idle animation by default
-        this.play('robber_idle');
+
+        if (this.clothing == 'robber') {
+            this.play('robber_idle');
+        }
+        else if (this.clothing == 'business') {
+            this.play('business_idle');
+        }
 
         //------- KEYBOARD INPUT ------
         //detect keys here instead of in each scene
@@ -218,7 +234,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
                 }
             }
         }
-        else { //business costume
+        else if (this.clothing == 'business') { //business costume
             if (velocityX > 0){ //moving right
                 if (this.anims.currentAnim?.key !== 'business_right'){
                     this.play( 'business_right', true);

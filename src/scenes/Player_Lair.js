@@ -24,6 +24,10 @@ export class Player_Lair extends Phaser.Scene{
     }
 
     create(){
+
+        this.sys.events.on('wake', () => {
+            this.player.clothing = this.scene.get('UI').clothing;
+        });
         //--------- BACKGROUND -------
         this.lair = this.add.tilemap("playerLair");
         const interior2 = this.lair.addTilesetImage("interior2", "interior2");
@@ -48,7 +52,9 @@ export class Player_Lair extends Phaser.Scene{
         Player.createAnimations(this);
         //i want the player to spawn next to the door (tile: x: 2, y: 3)
         const playerSpawn = this.lair.tileToWorldXY(2, 3);
-        this.player = new Player(this, playerSpawn.x + 25, playerSpawn.y).setDepth(4).setScale(3.3);
+
+        const UI = this.scene.get('UI');
+        this.player = new Player(this, playerSpawn.x + 25, playerSpawn.y, UI.clothing).setDepth(4).setScale(3.3);
         this.player.setSize(8, 9);
         this.player.setOffset(1.5, 5.5);
 
@@ -141,10 +147,12 @@ export class Player_Lair extends Phaser.Scene{
                 //CHANGE PLAYER COSTUME
                 if (this.player.clothing == "robber"){
                     this.player.clothing = "business";
+                    this.scene.get('UI').clothing = 'business';
                     this.player.setTexture("businessFront", 0);
                 }
                 else {
                     this.player.clothing = "robber";
+                    this.scene.get('UI').clothing = 'robber';
                     this.player.setTexture("robberFront", 0);
                 }
 
