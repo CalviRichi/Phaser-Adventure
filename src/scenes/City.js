@@ -92,6 +92,10 @@ export class City extends Phaser.Scene{
         this.player.body.setSize(8, 9); //change hitbox size
         this.player.setOffset(1.5, 5.5); //change hitbox loc
         // the only layers the player DOES NOT collide with are "ground" and "decoration_noclip"
+
+        this.physics.world.setBounds(0, 0, this.MAPWIDTH, this.MAPHEIGHT);
+        this.player.setCollideWorldBounds(true);
+
         this.physics.add.collider(this.player, buildings, (player, tile) => {
            // console.log("building");
         });
