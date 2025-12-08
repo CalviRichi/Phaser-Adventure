@@ -153,7 +153,7 @@ export class City extends Phaser.Scene{
         //(using these in update())
         this.lairDoorPrompt = this.add.text(100, 100, "hit E to use door", {
             fontSize: '30px',
-            fontFamily: 'Lucida Console',
+            fontFamily: 'Courier New',
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3
@@ -161,7 +161,7 @@ export class City extends Phaser.Scene{
 
         this.doorPrompt = this.add.text(100, 100, "hit E to start unlocking door", {
             fontSize: '30px',
-            fontFamily: 'Lucida Console',
+            fontFamily: 'Courier New',
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3

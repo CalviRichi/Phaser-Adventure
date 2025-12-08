@@ -6,7 +6,8 @@ export class Title_Screen extends Phaser.Scene {
     constructor() {
         super('Title_Screen');
 
-        this.MAPSCALE = 2.5;
+        this.MAPSCALE = 2.8;
+        this.LAIRSCALE = 2.1;
     }
 
     preload() {
@@ -56,18 +57,31 @@ export class Title_Screen extends Phaser.Scene {
         const interior2 = this.lair.addTilesetImage("interior2", "interior2");
         const indoor = this.lair.addTilesetImage("indoor", "indoor");
         var ltileset = [urban11, urban22, interior2, indoor];
-        const lairX = 800;
-        const lairY = 300;
+        const lairX = 784;
+        const lairY = 315;
         var walls, floor, solidDecor, decor, shelfDecor, door2;
-        walls = this.lair.createLayer("walls", ltileset).setDepth(5).setScale(2).setPosition(lairX, lairY);
-        floor = this.lair.createLayer("floor", ltileset).setDepth(5).setScale(2).setPosition(lairX, lairY);
-        solidDecor = this.lair.createLayer("decoration-solid-obj", ltileset).setDepth(6).setScale(2).setPosition(lairX, lairY);
-        decor = this.lair.createLayer("decoration", ltileset).setDepth(7).setScale(2).setPosition(lairX, lairY);
-        shelfDecor = this.lair.createLayer("shelf-decor", ltileset).setDepth(8).setScale(2).setPosition(lairX, lairY);
-        door2 = this.lair.createLayer("door", ltileset).setDepth(8).setScale(2).setPosition(lairX, lairY);
+        walls = this.lair.createLayer("walls", ltileset).setDepth(5).setScale(this.LAIRSCALE).setPosition(lairX, lairY);
+        floor = this.lair.createLayer("floor", ltileset).setDepth(5).setScale(this.LAIRSCALE).setPosition(lairX, lairY);
+        solidDecor = this.lair.createLayer("decoration-solid-obj", ltileset).setDepth(6).setScale(this.LAIRSCALE).setPosition(lairX, lairY);
+        decor = this.lair.createLayer("decoration", ltileset).setDepth(7).setScale(this.LAIRSCALE).setPosition(lairX, lairY);
+        shelfDecor = this.lair.createLayer("shelf-decor", ltileset).setDepth(8).setScale(this.LAIRSCALE).setPosition(lairX, lairY);
+        door2 = this.lair.createLayer("door", ltileset).setDepth(8).setScale(this.LAIRSCALE).setPosition(lairX, lairY);
 
         //------- PLAYER ----------
         Player.createAnimations(this);
+        this.player  = new Player(this, 1130, 370, 'robber').setDepth(10).setScale(8);
+        //don't need setSize/setOffset cuz no collisions/threats
+        //trying to set up a cool thing where the player costume switches every few seconds
+        this.time.delayedCall(5000, () => {
+            this.time.addEvent({
+                delay: 5000, //go every 3 seconds
+                callback: this.changeOutfit, //call helper function
+                callbackScope: this, //after calling function, come back here
+                loop: true //loop infinitely
+            });
+        });
+        //---- PLAYER
+        
 
         //------- CHARACTER --------
         if (!this.anims.exists("yapper")){
@@ -83,7 +97,7 @@ export class Title_Screen extends Phaser.Scene {
                 repeat: -1
             });
         }
-        this.npcYapper = this.add.sprite(100, 100, "NPCyapper").setDepth(5).setScale(3);
+        this.npcYapper = this.add.sprite(100, 100, "NPCyapper").setDepth(10).setScale(8);
         this.npcYapper.play("yapper");
 
         //-------- TITLE & CREATORS ---------
@@ -91,9 +105,31 @@ export class Title_Screen extends Phaser.Scene {
         //------- CONTROLS ---------
     }
 
+    changeOutfit(){ //copying similar style from Player_Lair, minus button pressing
+        if (this.player.clothing == "robber"){
+            this.player.clothing = "business";
+            //don't need to update UI (UI prolly isn't even running yet)
+            this.player.setTexture("businessFront", 0);
+        }
+        else {
+            this.player.clothing = "robber";
+            this.player.setTexture("robberFront", 0);
+        }
+
+        //forcing idle animations to change
+        if (this.player.clothing == "robber"){
+            this.player.play("robber_idle", true);
+        }
+        else {
+            this.player.play("business_idle", true);
+        }
+    }
+
     update(time){
         //this.scene.stop("Title_Screen");
         //this.scene
-        
+        if (this.player){
+            this.player.update();
+        }
     }
 }

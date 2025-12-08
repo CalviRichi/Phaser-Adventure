@@ -83,7 +83,7 @@ export class Player_Lair extends Phaser.Scene{
         //start invisible, switch visibility in update, then switch again
         this.doorPrompt = this.add.text (100, 100, "hit E to use door", {
             fontSize: '30px',
-            fontFamily: 'Lucida Console',
+            fontFamily: 'Courier New',
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3
@@ -91,7 +91,7 @@ export class Player_Lair extends Phaser.Scene{
 
         this.clothesPrompt = this.add.text(100, 100, "hit E to change outfit", {
             fontSize: '30px',
-            fontFamily: 'Lucida Console',
+            fontFamily: 'Courier New',
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3
