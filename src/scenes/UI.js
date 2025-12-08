@@ -34,12 +34,6 @@ export class UI extends Phaser.Scene {
         // (3,4) to (7,11)
         let item1 = new Item('test', 3, 3, 1, true);
         let item2 = new Item('next', 2, 4, 1, true);
-        this.inventory.add(item1, {x: 0, y: 0});
-        this.inventory.add(item2, {x: 0, y : 3});
-        this.item_group = this.add.group('items'); // contains different rectangles
-        this.addRectangles(); // should be called every inventory call
-
-        this.scene.setVisible(false);
 
         let inventory_adjust = this.inventoryMap.tileToWorldXY(2.5, 0.5);
 
@@ -49,6 +43,21 @@ export class UI extends Phaser.Scene {
         infoPopUp.x += inventory_adjust.x;
         infoPopUp.y -= inventory_adjust.y;
 
+        this.inventory.add(item1, {x: 0, y: 0});
+        this.inventory.add(item2, {x: 0, y : 3});
+
+        this.item_list = []; // this will work as a parallel to the inventory
+        // item_list[i] corresponds to this.inventory.items[i]
+
+        this.addRectangles(); // should be called every inventory call
+        this.scene.setVisible(false);
+
+        
+
+        
+
+        this.item_held_index = -1;
+
         this.input.on('pointerdown', (pointer) => {
 
             if (!this.on) return;
@@ -56,10 +65,40 @@ export class UI extends Phaser.Scene {
        //     console.log(pointer.x + " " + pointer.y);
             const tile = this.inventoryMap.getTileAtWorldXY(pointer.x, pointer.y, true, null, 'peepeepoopoo');
             // (3,4) to (7,11) are the valid inventory spots 
-            if (tile) {
+            if (tile && tile.index == 113) { // if it is a valid slot tile
+
+                let adjustCoord = { x : tile.x - 3, y: tile.y - 4}; // adjusted to the dimensions of the inventory
                 
-         //       console.log('Clicked tile:', tile.x, tile.y);
-          //      console.log('Tile index:', tile.index);
+                if (this.item_held_index != -1) { // if we are already holding an item
+                 
+                    this.inventory.items[this.item_held_index].origin.x = adjustCoord.x;
+                    this.inventory.items[this.item_held_index].origin.y = adjustCoord.y;
+                   
+                    this.item_held_index = -1;
+                    
+                    this.addRectangles();
+                    
+                    
+                }
+                else { // if we are picking up an item
+                    
+                for (let item = 0; item < this.inventory.items.length; item++) {
+                    if (this.inventory.items[item].origin.x <= adjustCoord.x && 
+                        this.inventory.items[item].origin.y <= adjustCoord.y &&
+                        this.inventory.items[item].origin.x + (this.inventory.items[item].vec.x - 1) >= adjustCoord.x &&
+                        this.inventory.items[item].origin.y + (this.inventory.items[item].vec.y - 1) >= adjustCoord.y
+                    ) {
+                        console.log("click");
+                        this.item_held_index = item;
+                    }
+                }
+                }
+                
+            }
+            else {
+                for (let i of this.inventory.items) {
+                    console.log(i.name + '(' + i.origin.x + ", " + i.origin.y + ')');
+                }
             }
         });
 
@@ -71,6 +110,11 @@ export class UI extends Phaser.Scene {
         if (this.on) {
 
             let pointer = this.input.activePointer;
+
+            if (this.item_held_index != -1) {
+                this.item_list[this.item_held_index].x = pointer.x;
+                this.item_list[this.item_held_index].y = pointer.y;
+            }
 
             const tile = this.inventoryMap.getTileAtWorldXY(pointer.x, pointer.y, true, null, 'peepeepoopoo');
 
@@ -90,14 +134,21 @@ export class UI extends Phaser.Scene {
 
     addRectangles() {
 
-        this.item_group.clear(true);
+        for (let i = 0; i < this.item_list.length; i++) {
+            this.item_list[i].destroy();
+        }
+        this.item_list.length = 0;
 
-        for (let item of this.inventory.items) {
+        for (let i = 0; i < this.inventory.items.length; i++) {
                 
-                let itemCoord = this.inventoryMap.tileToWorldXY(item.origin.x + 3 + 2.5, item.origin.y + 3.5); // origin
-          //      console.log("origin: " + itemCoord.x + ', ' + itemCoord.y);
-                let itemVec = this.inventoryMap.tileToWorldXY(item.vec.x, item.vec.y); // width and height
-            //    console.log('vector: ' + (itemVec.x + itemCoord.x) + ', ' + (itemVec.y + itemCoord.y));
+                let item = this.inventory.items[i];
+
+                let itemCoord = this.inventoryMap.tileToWorldXY(item.origin.x + 3, item.origin.y + 4); // origin
+                //console.log("item origin: " + item.origin.x + ", " + item.origin.y);                                                    
+        
+                let itemVec = this.inventoryMap.tileToWorldXY(item.vec.x - 2.5, item.vec.y + 0.5); // width and height
+                //console.log("item vector: " + item.vec.x + ", " + item.vec.y);
+                
                 let itemColor;
                 if (item.name == "test") {
                     itemColor = 0xff0000;
@@ -105,8 +156,10 @@ export class UI extends Phaser.Scene {
                 else {
                     itemColor = 0x00ff00;
                 }
-                const rect = this.add.rectangle(itemCoord.x, itemCoord.y, itemVec.x, itemVec.y, itemColor, 0.8).setOrigin(0,0);
-                this.item_group.add(rect);
+                let rect = this.add.rectangle(itemCoord.x, itemCoord.y, itemVec.x, itemVec.y, itemColor, 0.8).setOrigin(0);
+                //console.log('adding ' + item.name + ' rectangle: ' + itemCoord.x + ", " + itemCoord.y + ", " + itemVec.x + ", " + itemVec.y);
+                this.item_list.push(rect); // i corresponds
+                //console.log("----------------");
         }
 
     }
