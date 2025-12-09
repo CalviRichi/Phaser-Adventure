@@ -23,6 +23,7 @@ export class Title_Screen extends Phaser.Scene {
         //----- PLAYER & NPC -----
         Player.preload(this);
         NPC.preload(this);
+        this.load.image("speechblurb", "assets/speech bubble.png");
 
         //------ KEYCAPS ------
         this.load.image("W", "assets/keyCaps/tile_0086.png");
@@ -31,9 +32,36 @@ export class Title_Screen extends Phaser.Scene {
         this.load.image("D", "assets/keyCaps/tile_0122.png");
         this.load.image("E", "assets/keyCaps/tile_0087.png");
         this.load.image("I", "assets/keyCaps/tile_0092.png");
+
+        //--------- SOUND ---------
+        this.load.audio('bgmusic', 'assets/audio/simple.mp3');
+        this.load.audio('police siren', 'assets/audio/police siren.mp3');
     }
 
     create() {
+        //------- AMBIENT AUDIO -----
+        this.sound.stopAll(); //kill any lingering music
+        this.bgmusic = this.sound.add('bgmusic', {
+            volume: 1.2,
+            loop: true
+        });
+        this.bgmusic.play();
+        this.police = this.sound.add('police siren', {
+            volume: 0.8,
+            loop: false
+        });
+        this.time.delayedCall(5000, () => {
+            //play once initially
+            this.police.play();
+            this.time.addEvent({
+                delay: 13000, 
+                callback: () => {
+                    this.police.play();
+                },
+                loop: true //loop infinitely
+            });
+        });
+
         //------ BACKGROUND ------
         //city (positioning on the left side of the screen)
         this.city = this.add.tilemap("city");
@@ -77,7 +105,7 @@ export class Title_Screen extends Phaser.Scene {
         //trying to set up a cool thing where the player costume switches every few seconds
         this.time.delayedCall(5000, () => {
             this.time.addEvent({
-                delay: 5000, //go every 3 seconds
+                delay: 5000, //go every 5 seconds
                 callback: this.changeOutfit, //call helper function
                 callbackScope: this, //after calling function, come back here
                 loop: true //loop infinitely
@@ -103,6 +131,17 @@ export class Title_Screen extends Phaser.Scene {
         NPC.createAnimations(this);
         this.layla = new NPC(this, 200, 250, "house_1").setDepth(10).setScale(8);
         this.layla.play("h1_right");
+        this.speechBub = this.add.sprite(380, 180, "speechblurb").setDepth(10).setScale(0.8);
+        this.robberYap = this.add.text(230, 115, "hey, that's my shit!!", {
+            fontSize: '28px',
+            fontFamily: 'Courier New',
+            color: '#000000'
+        }).setAlpha(1).setDepth(11);
+        this.businessYap = this.add.text(220, 105, "      oh wow, what a\ntrustworthy businessman <3", {
+            fontSize: '24px',
+            fontFamily: 'Courier New',
+            color: '#000000'
+        }).setAlpha(0).setDepth(11);
 
         //-------- TITLE & CREATORS ---------
         //title
@@ -230,11 +269,17 @@ export class Title_Screen extends Phaser.Scene {
             this.player.play("robber_idle", true);
             this.robberFit.setAlpha(1);
             this.businessFit.setAlpha(0);
+            //set npc text
+            this.robberYap.setAlpha(1);
+            this.businessYap.setAlpha(0);
         }
         else {
             this.player.play("business_idle", true);
             this.robberFit.setAlpha(0);
             this.businessFit.setAlpha(1);
+            //set npc text too
+            this.robberYap.setAlpha(0);
+            this.businessYap.setAlpha(1);
         }
     }
 
