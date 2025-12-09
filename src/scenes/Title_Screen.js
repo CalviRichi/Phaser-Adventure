@@ -132,7 +132,7 @@ export class Title_Screen extends Phaser.Scene {
         this.layla = new NPC(this, 200, 250, "house_1").setDepth(10).setScale(8);
         this.layla.play("h1_right");
         this.speechBub = this.add.sprite(380, 180, "speechblurb").setDepth(10).setScale(0.8);
-        this.robberYap = this.add.text(230, 115, "hey, that's my shit!!", {
+        this.robberYap = this.add.text(230, 115, "hey, that's my stuff!!", {
             fontSize: '28px',
             fontFamily: 'Courier New',
             color: '#000000'
