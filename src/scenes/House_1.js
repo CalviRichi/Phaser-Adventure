@@ -82,7 +82,8 @@ export class House_1 extends Phaser.Scene {
             // ADD TEXT FOR THIS
 
             if (Phaser.Input.Keyboard.JustDown(this.e)) {
-            
+
+                this.game.events.emit('tradeMode', "house_1", true); // wouldn't stay trade mode 
                 this.player.switchUI();
             }
         });

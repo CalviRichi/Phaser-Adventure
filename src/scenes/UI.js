@@ -42,6 +42,7 @@ export class UI extends Phaser.Scene {
         this.on = false;
         
         this.tradeBool = false; //this is for stuff in update
+        this.itemBool = false; // equivalent to tradeBool but for picking up items
 
         this.clothing = 'robber';
 
@@ -73,6 +74,8 @@ export class UI extends Phaser.Scene {
         this.input.on('pointerdown', (pointer) => {
 
             if (!this.on) return;
+
+            console.log("click");
 
        //     console.log(pointer.x + " " + pointer.y);
             const tile = this.inventoryMap.getTileAtWorldXY(pointer.x, pointer.y, true, null, 'peepeepoopoo');
@@ -112,21 +115,27 @@ export class UI extends Phaser.Scene {
                 }
                 
             }
-            else if (tile && tile.index && this.tradeBool) {
+            else {
+                const infotile = this.inventoryMap.getTileAtWorldXY(pointer.x, pointer.y, true, null, 'info_popup');
 
+                if (infotile) {
+                    console.log("tile x: " + infotile.x + ", tile y: " + infotile.y, ", tile ID: " + infotile.index);
+                }
+                // indices are 44 and 45 
+                if (tile && (tile.index == 44 || tile.index == 45) && this.tradeBool) {
+
+                }
             } // if tile index is one of the ones on the right
             
-            else {
-                for (let i of this.inventory.items) {
-                    console.log(i.name + '(' + i.origin.x + ", " + i.origin.y + ')');
-                }
-            }
+            
         });
 
         this.last_tile = null;
+        this.last_info_tile = null;
 
         //this is a listener from City.js, for detecting what mode to launch ui in
         this.game.events.on('tradeMode', this.tradeMode, this);
+        this.game.events.on('itemMode', this.itemMode, this);
 
         //------- NPC's ------
         NPC.createAnimations(this);
@@ -154,6 +163,14 @@ export class UI extends Phaser.Scene {
             stroke: '#000000',
             strokeThickness: 3
         }).setAlpha(1).setDepth(10).setOrigin(0.5);
+    }
+
+    itemMode(location, itemMode) {
+
+        if (itemMode == false) {
+
+        }
+
     }
 
     //trade mode re-uses ui elements for different purposes than inventory
@@ -206,6 +223,7 @@ export class UI extends Phaser.Scene {
             }
 
             const tile = this.inventoryMap.getTileAtWorldXY(pointer.x, pointer.y, true, null, 'peepeepoopoo');
+            const infotile = this.inventoryMap.getTileAtWorldXY(pointer.x, pointer.y, true, null, "info_popup");
 
             if (tile && (tile == this.last_tile || this.last_tile == null)) {
                 if (tile.index == 113) {
@@ -217,6 +235,20 @@ export class UI extends Phaser.Scene {
             }
 
             this.last_tile = tile;
+
+            if (infotile && (infotile == this.last_info_tile || this.last_info_tile == null)) {
+                if (infotile.index == 45 || infotile.index == 44) {
+                    infotile.tint = 0xbbbbbb;
+                }
+            }
+            else if (this.last_info_tile) {
+                this.last_info_tile.tint = 0xffffff;
+            }
+
+            this.last_info_tile = infotile;
+
+
+            
         }
 
         //just an extra catch

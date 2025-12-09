@@ -230,12 +230,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
                 }
             }
             
-            if (velocityY > 0){ //moving up (i think??)
+            if (velocityY > 0 && velocityX == 0){ //moving up (i think??)
                 if (this.anims.currentAnim?.key !== 'business_back'){
                     this.play( 'business_back', true);
                 }
             }
-            else if (velocityY < 0){ //moving down (i think??)
+            else if (velocityY < 0 && velocityX == 0){ //moving down (i think??)
                 if (this.anims.currentAnim?.key !== 'business_front'){
                     this.play( 'business_front', true);
                 }
@@ -263,6 +263,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
                 UI.on = true;
             }
             else {
+                this.scene.game.events.emit('tradeMode', "house_1", false); // there should be more of these than just the house
                 this.scene.scene.sendToBack('UI');
                 UI.scene.setVisible(false);
                 UI.on = false;
