@@ -10,6 +10,14 @@ export class HUD extends Phaser.Scene {
 
     create(){
         //important player information that's permanently in the corner !!!
+
+        this.carryingCapacity = this.add.text(200, 15, "Inventory Occupied: 17 / 40 Spaces", { // this will eventually be the bar that shows up
+            fontSize: '28px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 6
+        }).setScrollFactor(0);
         this.moneyCounter = this.add.text(8, 15, "$000.00", {
             fontSize: '36px',
             fontFamily: 'Courier New',
@@ -34,6 +42,13 @@ export class HUD extends Phaser.Scene {
         this.game.events.on('updateMoney', this.updateMoney, this);
         //arrest update
         this.game.events.on('updateArrests', this.updateArrests, this);
+
+        this.game.events.on('weight_update', this.weightUpdate, this);
+    }
+
+    weightUpdate(count, size) {
+        if (size != 40) return; // 40 is a magic number, 5 x 8, current player inventory size
+        this.carryingCapacity.setText("Inventory Occupied: " + count + ' / ' + size + " Spaces");
     }
 
     updateMoney(amount){

@@ -32,7 +32,7 @@ export class UI extends Phaser.Scene {
         this.inventoryMap = this.add.tilemap("inventory");
         const urban2 = this.inventoryMap.addTilesetImage("urban2", "urban2");
         var inventory;
-        this.inventory = new Inventory(5, 8);
+        this.inventory = new Inventory(this, 5, 8);
         inventory = this.inventoryMap.createLayer("peepeepoopoo", urban2).setScale(this.MAPSCALE);
         //infopopup should only show when player is hovering over an item in their inventory
         //this is also used in tradeMode, for slightly diff purpose
@@ -52,7 +52,7 @@ export class UI extends Phaser.Scene {
 
         let inventory_adjust = this.inventoryMap.tileToWorldXY(2.5, 0.5);
 
-        this.trade_inventory = new Inventory(5, 3); // this is the backend to the infopopup visual
+        this.trade_inventory = new Inventory(this, 5, 3); // this is the backend to the infopopup visual
         // items will be added / removed based on scene interactions 
 
         inventory.x += inventory_adjust.x;
@@ -108,6 +108,8 @@ export class UI extends Phaser.Scene {
                         if (this.trade_inventory.contains(this.item_held_name)) {
                             this.trade_inventory.remove(this.item_held_name);
                         }
+
+                        this.game.events.emit('weight_update', this.inventory.count, this.inventory.SIZE);
 
                         let value = 0;
                         for (let item of this.trade_inventory.items) {
@@ -178,6 +180,8 @@ export class UI extends Phaser.Scene {
                         if (this.inventory.contains(this.item_held_name)) {
                             this.inventory.remove(this.item_held_name);
                         }
+
+                        this.game.events.emit('weight_update', this.inventory.count, this.inventory.SIZE);
 
                         let value = 0;
                         for (let item of this.trade_inventory.items) {
@@ -252,20 +256,20 @@ export class UI extends Phaser.Scene {
 
 
         //-------- Items -----------
-        this.item_name = this.add.text(1, 1, "", { // CHANGE 1, 1 TO A REAL COORDINATE ASAP
+        this.item_name = this.add.text(1007, 190, "", { // CHANGE 1, 1 TO A REAL COORDINATE ASAP
             fontSize: '28px',
             fontFamily: 'Courier New',
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3
-        });
-        this.item_description = this.add.text(1, 1, "", {
+        }).setAlpha(1).setDepth(10).setOrigin(0.5);
+        this.item_description = this.add.text(1025, 250, "", {
             fontSize: '16px',
             fontFamily: 'Courier New',
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3
-        });
+        }).setAlpha(1).setDepth(10).setOrigin(0.5);
     }
 
     itemMode(location, itemMode) {
@@ -273,7 +277,7 @@ export class UI extends Phaser.Scene {
         if (itemMode == false) {
             this.itemBool = false;
 
-            //console.log("itembool off");
+            console.log("itembool off");
 
             for (let i in this.trade_inventory.items) {
                 //console.log("removing: " + this.trade_inventory.items[i].name);
@@ -298,7 +302,7 @@ export class UI extends Phaser.Scene {
 
             switch (location){
                 case "house_1": 
-                    
+                    console.log("\n\n\nHouse 1\n\n\n");
                     this.name.setText("Sword");
                     this.info.setText("Seems like a valuable collector's piece...");
                     break;
@@ -312,6 +316,11 @@ export class UI extends Phaser.Scene {
         //false means turn it off
         if (tradeMode == false){
             this.tradeBool = false; //update UI local variable
+
+            for (let i in this.trade_inventory.items) {
+                //console.log("removing: " + this.trade_inventory.items[i].name);
+                this.trade_inventory.remove(this.trade_inventory.items[i].name);
+            }
             
             //make all the info, text, NPC invisible
             this.infoPopUp.setVisible(false);

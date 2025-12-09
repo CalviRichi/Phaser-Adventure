@@ -100,7 +100,7 @@ export class Title_Screen extends Phaser.Scene {
 
         //------- PLAYER ----------
         Player.createAnimations(this);
-        this.player  = new Player(this, 1145, 215, 'robber').setDepth(10).setScale(8);
+        this.player  = new Player(this, 1145, 215).setDepth(10).setScale(8);
         //don't need setSize/setOffset cuz no collisions/threats
         //trying to set up a cool thing where the player costume switches every few seconds
         this.time.delayedCall(5000, () => {

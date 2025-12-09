@@ -90,7 +90,7 @@ export class City extends Phaser.Scene{
 
         //-------- PLAYER --------
         Player.createAnimations(this);
-        this.player = new Player(this, 300, 100, 'robber').setDepth(4); // not sure what x and y are yet
+        this.player = new Player(this, 300, 100).setDepth(4); // add 'robber' back
         this.player.setScale(3.3);
         this.player.body.setSize(8, 9); //change hitbox size
         this.player.setOffset(1.5, 5.5); //change hitbox loc
@@ -266,12 +266,14 @@ export class City extends Phaser.Scene{
                     if (this.scene.get('UI').on == true){ //if ui is already on, turn off
                         this.game.events.emit('tradeMode', "house_1", false);
 
-                        this.player.switchUI();
+                        
                     }
                     else{ //if ui is not on, it means player wants to enter it
                         this.game.events.emit('tradeMode', "house_1", true);
-                        this.player.switchUI();
+                        
                     }
+                    this.scene.get('UI').addRectangles();
+                    this.player.switchUI();
                 }         
             }
         }

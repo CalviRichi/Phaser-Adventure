@@ -2,7 +2,7 @@ import { Item } from "./Item.js"; // figure out where this is used
 
 export class Inventory {
 
-    constructor(x_dim, y_dim) { // replace MAT_X and MAT_Y with these params 
+    constructor(scene, x_dim, y_dim) { // replace MAT_X and MAT_Y with these params 
         // different scenes will have their inventories 
 
         this.SIZE = x_dim * y_dim;
@@ -18,10 +18,16 @@ export class Inventory {
             }
         }
 
+        this.scene = scene;
+
+        this.count = 0;
 
         this.items = [];
     //    this.playerData = {hp : 10}; // add more at some points
-        this.weightRatio = 1;
+     //   this.weightRatio = 1;
+
+        this.scene.game.events.emit('weight_update', this.count, this.SIZE);
+        console.log("constructor weight event");
     }
 
 
@@ -58,6 +64,12 @@ export class Inventory {
         let itemVecX = item.vec.x + coord.x;
         let itemVecY = item.vec.y + coord.y;
 
+        if (itemVecX - 1 >= this.MAT_X || itemVecY -1 >= this.MAT_Y) {
+            item.origin = backup;
+            console.log('placement not valid');
+            return false;
+        }
+
         let tempMat = structuredClone(this.itemMatrix);
 
         for (let i = coord.y; i < itemVecY; i++) {
@@ -83,7 +95,14 @@ export class Inventory {
             
             }
         }
-        this.weightRatio = (count) ? count : 1;
+        //this.weightRatio = (count) ? 1 - ((count / this.SIZE) / 2) : 1;
+
+        //console.log("weight ratio: " + this.weightRatio);
+
+        this.count = count;
+
+        this.scene.game.events.emit('weight_update', count, this.SIZE);
+        console.log("add weight event");
 
         return true;
 
@@ -122,7 +141,14 @@ export class Inventory {
             
             }
         }
-        this.weightRatio = (count) ? count : 1;
+        //this.weightRatio = (count) ? 1 - ((count / this.SIZE) / 2) : 1;
+
+        //console.log("weight ratio: " + this.weightRatio);
+
+        this.count = count;
+
+        this.scene.game.events.emit('weight_update', count, this.SIZE);
+        console.log("remove weight event");
 
         return toBeRemoved;
 

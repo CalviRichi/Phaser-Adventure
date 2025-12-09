@@ -69,7 +69,7 @@ export class Player_Lair extends Phaser.Scene{
         const playerSpawn = this.lair.tileToWorldXY(2, 3);
 
         const UI = this.scene.get('UI');
-        this.player = new Player(this, playerSpawn.x + 25, playerSpawn.y, UI.clothing).setDepth(4).setScale(3.3);
+        this.player = new Player(this, playerSpawn.x + 25, playerSpawn.y).setDepth(4).setScale(3.3);
         this.player.setSize(8, 9);
         this.player.setOffset(1.5, 5.5);
 

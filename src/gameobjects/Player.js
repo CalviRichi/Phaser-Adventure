@@ -157,12 +157,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         The player will take in whatever state that the inventory provides it
         */
         //this.weapon = 
+        let UI = scene.scene.get('UI');
+        let weight = 1 - ((UI.inventory.count / UI.inventory.SIZE) / 2);
 
         this.scene = scene;
         this.x = x; this.y = y;
         this.clothing = "robber";
-        this.speed = 220; //used in update() for movement (change ## to change speed)
-
+        this.speed = 250 * weight; //used in update() for movement (change ## to change speed)
+        console.log("speed: " + this.speed);
         //adding physics n world colliders to player sprite
         scene.physics.add.existing(this);
         scene.add.existing(this);
@@ -180,6 +182,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         this.enter = false;
         this.inventory = scene.input.keyboard.addKey("I");
         this.UI_on = false;
+
+        this.scene.game.events.on('weight_update', (count, size) => {
+            if (size == UI.inventory.SIZE) {
+                // only update on player updates
+
+                weight = 1 - ((count / size) / 2);
+                console.log(weight);
+                this.speed = 250 * weight;
+                console.log("speed: " + this.speed);
+            }
+            
+        }, this); 
 
     }
 
@@ -231,13 +245,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
             }
             
             if (velocityY > 0 && velocityX == 0){ //moving up (i think??)
-                if (this.anims.currentAnim?.key !== 'business_back'){
-                    this.play( 'business_back', true);
+                if (this.anims.currentAnim?.key !== 'business_front'){
+                    this.play( 'business_front', true);
                 }
             }
             else if (velocityY < 0 && velocityX == 0){ //moving down (i think??)
-                if (this.anims.currentAnim?.key !== 'business_front'){
-                    this.play( 'business_front', true);
+                if (this.anims.currentAnim?.key !== 'business_back'){
+                    this.play( 'business_back', true);
                 }
             }
       
@@ -273,6 +287,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
             }
             else {
                 this.scene.game.events.emit('tradeMode', "house_1", false); // there should be more of these than just the house
+                //this.scene.game.events.emit('itemMode', 'house_1', false);
+                UI.addRectangles();
                 this.scene.scene.sendToBack('UI');
                 UI.scene.setVisible(false);
                 UI.on = false;
