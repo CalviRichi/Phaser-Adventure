@@ -85,9 +85,10 @@ export class UI extends Phaser.Scene {
        //     console.log(pointer.x + " " + pointer.y);
             const tile = this.inventoryMap.getTileAtWorldXY(pointer.x, pointer.y, true, null, 'peepeepoopoo');
             // (3,4) to (7,11) are the valid inventory spots 
+            let adjustCoord = { x : tile.x - 3, y: tile.y - 4}; // adjusted to the dimensions of the inventory
             if (tile && tile.index == 113) { // if it is a valid slot tile
 
-                let adjustCoord = { x : tile.x - 3, y: tile.y - 4}; // adjusted to the dimensions of the inventory
+                
                 console.log("coordinate: " + adjustCoord.x + ", " + adjustCoord.y);
                 if (this.item_held_index != -1) { // if we are already holding an item
                     console.log("holding item - name: " + this.item_held_name);
@@ -147,8 +148,12 @@ export class UI extends Phaser.Scene {
                 //    console.log("tile x: " + infotile.x + ", tile y: " + infotile.y, ", tile ID: " + infotile.index);
                 //}
                 // indices are 44 and 45 
-                if (infotile && (infotile.index == 44 || infotile.index == 45)) {
-                    let adjustCoord = { x : tile.x - 14, y: tile.y - 9};
+                adjustCoord = { x : infotile.x - 14, y: infotile.y - 9};
+                if (infotile && (infotile.index == 44 || infotile.index == 45) &&
+                 (adjustCoord.x >= 0 && adjustCoord.x <= 4) &&
+                 (adjustCoord.y >= 0 && adjustCoord.y <= 2)) {
+
+
                     // CODE FOR MOVING ITEMS IN BETWEEN THE TWO INVENTORY BOARDS   
                     if (this.tradeBool) {
                         
@@ -388,7 +393,10 @@ export class UI extends Phaser.Scene {
             this.last_tile = tile;
 
             if (infotile && (infotile == this.last_info_tile || this.last_info_tile == null)) {
-                if (infotile.index == 45 || infotile.index == 44) {
+                let adjustCoord = {x: infotile.x - 14, y: infotile.y - 9};
+                if ((infotile.index == 44 || infotile.index == 45) &&
+                   (adjustCoord.x >= 0 && adjustCoord.x <= 4) &&
+                   (adjustCoord.y >= 0 && adjustCoord.y <= 2)) {
                     infotile.tint = 0xbbbbbb;
                 }
             }
@@ -397,6 +405,14 @@ export class UI extends Phaser.Scene {
             }
 
             this.last_info_tile = infotile;
+
+            /*
+
+            for loop over rectangles in EITHER inventory, show descriptions if hovering over
+                if (! (this.itemBool || this.tradeBool )) {
+                    turn off the elements
+                }
+            */
 
 
             
