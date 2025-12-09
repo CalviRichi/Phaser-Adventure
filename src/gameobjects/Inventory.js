@@ -2,24 +2,25 @@ import { Item } from "./Item.js"; // figure out where this is used
 
 export class Inventory {
 
-    static SIZE = 40; // 5 x 8
-    static MAT_X = 5;
-    static MAT_Y = 8;
+    constructor(x_dim, y_dim) { // replace MAT_X and MAT_Y with these params 
+        // different scenes will have their inventories 
 
-    constructor() {
+        this.SIZE = x_dim * y_dim;
+        this.MAT_X = x_dim;
+        this.MAT_Y = y_dim;
 
-        this.itemMatrix = [ // for now 5 x 8
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0]
-        ];
+        this.itemMatrix = [];
+
+        for (let i = 0; i < y_dim; i++) {
+            this.itemMatrix.push([]);
+            for (let j = 0; j < x_dim; j++) {
+                this.itemMatrix[i].push(0);
+            }
+        }
+
+
         this.items = [];
-        this.playerData = {hp : 10}; // add more at some points
+    //    this.playerData = {hp : 10}; // add more at some points
         this.weightRatio = 1;
     }
     
@@ -35,7 +36,8 @@ export class Inventory {
 
         let itemVecX = item.vec.x + coord.x;
         let itemVecY = item.vec.y + coord.y;
-        let tempMat = this.itemMatrix;
+
+        let tempMat = structuredClone(this.itemMatrix);
 
         for (let i = coord.y; i < itemVecY; i++) {
             for (let j = coord.x; j < itemVecX; j++) {
@@ -53,8 +55,8 @@ export class Inventory {
 
         // update the weight
         let count = 0;
-        for (let i = 0; i < Inventory.MAT_Y; i++) {
-            for (let j = 0; j < Inventory.MAT_X; j++) {
+        for (let i = 0; i < this.MAT_Y; i++) {
+            for (let j = 0; j < this.MAT_X; j++) {
                 if (this.itemMatrix[i][j]) count++;
             
             }
@@ -90,8 +92,8 @@ export class Inventory {
 
         // update the weight
         let count = 0;
-        for (let i = 0; i < Inventory.MAT_Y; i++) {
-            for (let j = 0; j < Inventory.MAT_X; j++) {
+        for (let i = 0; i < this.MAT_Y; i++) {
+            for (let j = 0; j < this.MAT_X; j++) {
                 if (this.itemMatrix[i][j]) count++;
             
             }
@@ -125,26 +127,12 @@ export class Inventory {
         let itemVecX = toBeMoved.vec.x + coord.x;
         let itemVecY = toBeMoved.vec.y + coord.y;
 
-        if (itemVecX - 1 >= Inventory.MAT_X || itemVecY -1 >= Inventory.MAT_Y) {
+        if (itemVecX - 1 >= this.MAT_X || itemVecY -1 >= this.MAT_Y) {
             this.items[index].origin = backup;
             console.log('placement not valid');
             return false;
         }
-        let tempMat = [ // for now 5 x 8
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0]
-        ];
-        for (let i = 0; i < Inventory.MAT_Y; i++) {
-            for (let j = 0; j < Inventory.MAT_X; j++) {
-                tempMat[i][j] = this.itemMatrix[i][j];
-            }
-        }
+        let tempMat = structuredClone(this.itemMatrix);
 
         this.printMatrix();
 
@@ -186,9 +174,9 @@ export class Inventory {
     printMatrix() {
         console.log("Item Matrix:")
         let line = "";
-        for (let i = 0; i < Inventory.MAT_Y; i++) {
+        for (let i = 0; i < this.MAT_Y; i++) {
             line += "[ "
-            for (let j = 0; j < Inventory.MAT_X; j++) {
+            for (let j = 0; j < this.MAT_X; j++) {
                 line += this.itemMatrix[i][j] + " ";
             }
             line += "]\n"

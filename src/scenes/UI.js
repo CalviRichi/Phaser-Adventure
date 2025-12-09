@@ -24,10 +24,15 @@ export class UI extends Phaser.Scene {
     }
     create() {
 
+        this.dimmer = this.add.rectangle(0, 0, this.scale.width, this.scale.height, 0x000000, 0.5)
+            .setOrigin(0)
+            .setScrollFactor(0)
+            .setDepth(0);
+
         this.inventoryMap = this.add.tilemap("inventory");
         const urban2 = this.inventoryMap.addTilesetImage("urban2", "urban2");
         var inventory;
-        this.inventory = new Inventory();
+        this.inventory = new Inventory(5, 8);
         inventory = this.inventoryMap.createLayer("peepeepoopoo", urban2).setScale(this.MAPSCALE);
         //infopopup should only show when player is hovering over an item in their inventory
         //this is also used in tradeMode, for slightly diff purpose
@@ -62,10 +67,6 @@ export class UI extends Phaser.Scene {
 
         this.addRectangles(); // should be called every inventory call
         this.scene.setVisible(false);
-
-        
-
-        
 
         this.item_held_index = -1;
 
@@ -111,6 +112,9 @@ export class UI extends Phaser.Scene {
                 }
                 
             }
+            else if (tile && tile.index && this.tradeBool) {
+
+            } // if tile index is one of the ones on the right
             
             else {
                 for (let i of this.inventory.items) {

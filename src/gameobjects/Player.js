@@ -253,6 +253,23 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         this.setVelocityY(velocityY);
     }
 
+    switchUI() {
+        let UI = this.scene.scene.get('UI');
+            
+            if (!UI.on) {
+                console.log("UI");
+                this.scene.scene.bringToTop('UI');
+                UI.scene.setVisible(true);
+                UI.on = true;
+            }
+            else {
+                this.scene.scene.sendToBack('UI');
+                UI.scene.setVisible(false);
+                UI.on = false;
+            }
+
+    }
+
     update() {
         //------ PLAYER MOVEMENT STUFF ------
         let velocityX = 0; //left-right velocity
@@ -274,26 +291,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
 
         if (Phaser.Input.Keyboard.JustDown(this.inventory)) {
             
-            let UI = this.scene.get('UI');
-            
-            if (UI.on) {
-                UI.on = false; //______
+            this.switchUI();
+                                //______
             //      /\    ||     ||    | ||     ||    /\
             //     //\\   ||     ||____| ||     ||   //\\
             //    //__\\  ||     ||      ||_____||  //__\\
             //   //    \\ ||     ||      ||     || //    \\
-            //  //      \\||_____||      ||     ||//      \\
-            
-            }
-            else {
-                UI.on = true;
-
-
-
-            }
-            
+            //  //      \\||_____||      ||     ||//      \\      
         }
-
 
     }
 

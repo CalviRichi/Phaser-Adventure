@@ -48,11 +48,7 @@ export class City extends Phaser.Scene{
         });
 
         // In GameScene.create()
-        this.dimmer = this.add.rectangle(0, 0, this.scale.width, this.scale.height, 0x000000, 0.5)
-            .setOrigin(0)
-            .setScrollFactor(0)
-            .setDepth(9999)
-            .setVisible(false);
+        
 
 
         //------ HUD ----
@@ -267,13 +263,14 @@ export class City extends Phaser.Scene{
                 this.sellPrompt.setPosition(this.cameraCenterX, this.cameraCenterY);
                 this.sellPrompt.setAlpha(1);
                 if (Phaser.Input.Keyboard.JustDown(this.e)){
-                    if (this.player.UI_on == true){ //if ui is already on, turn off
+                    if (this.scene.get('UI').on == true){ //if ui is already on, turn off
                         this.game.events.emit('tradeMode', "house_1", false);
-                        this.player.UI_on = false;
+
+                        this.player.switchUI();
                     }
                     else{ //if ui is not on, it means player wants to enter it
                         this.game.events.emit('tradeMode', "house_1", true);
-                        this.player.UI_on = true;
+                        this.player.switchUI();
                     }
                 }         
             }
@@ -288,27 +285,7 @@ export class City extends Phaser.Scene{
         // if (this.player.enter) {
         //     console.log("E pressed");
         // }
-        let UI = this.scene.get('UI');
-        if (this.player.UI_on != this.last_UI_status) {
-            
-            console.log("UI");
-            this.scene.bringToTop('UI');
-            UI.scene.setVisible(true);
-            UI.on = true;
-            this.dimmer.setVisible(true);
-
-            if (this.last_UI_status) {
-                this.last_UI_status = false;
-                this.scene.sendToBack('UI');
-                UI.scene.setVisible(false);
-                UI.on = false;
-                this.dimmer.setVisible(false);
-
-            }
-            else {
-                this.last_UI_status = true;
-            }
-        }
+        
      //   console.log(this.player.x + ", " + this.player.y);
 
         
