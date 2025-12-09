@@ -45,7 +45,9 @@ export class UI extends Phaser.Scene {
 
         this.inventory.add(item1, {x: 0, y: 0});
         this.inventory.add(item2, {x: 0, y : 3});
-
+        //this.inventory.printMatrix();
+        //this.inventory.remove("test");
+        //this.inventory.printMatrix();
         this.item_list = []; // this will work as a parallel to the inventory
         // item_list[i] corresponds to this.inventory.items[i]
 
@@ -70,13 +72,18 @@ export class UI extends Phaser.Scene {
                 let adjustCoord = { x : tile.x - 3, y: tile.y - 4}; // adjusted to the dimensions of the inventory
                 
                 if (this.item_held_index != -1) { // if we are already holding an item
-                 
-                    this.inventory.items[this.item_held_index].origin.x = adjustCoord.x;
-                    this.inventory.items[this.item_held_index].origin.y = adjustCoord.y;
-                   
-                    this.item_held_index = -1;
                     
-                    this.addRectangles();
+                    let success;
+                    success = this.inventory.moveItem(this.item_held_index, adjustCoord);
+                //    this.inventory.items[this.item_held_index].origin.x = adjustCoord.x;
+                //    this.inventory.items[this.item_held_index].origin.y = adjustCoord.y;
+                   
+                    if (success){
+                        console.log("success");
+                        this.item_held_index = -1;
+                        this.addRectangles();
+                    }
+                    
                     
                     
                 }
