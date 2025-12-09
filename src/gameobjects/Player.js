@@ -273,12 +273,23 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         // }
 
         if (Phaser.Input.Keyboard.JustDown(this.inventory)) {
-           
-            if (this.UI_on) {
-                this.UI_on = false;
+            
+            let UI = this.scene.get('UI');
+            
+            if (UI.on) {
+                UI.on = false; //______
+            //      /\    ||     ||    | ||     ||    /\
+            //     //\\   ||     ||____| ||     ||   //\\
+            //    //__\\  ||     ||      ||_____||  //__\\
+            //   //    \\ ||     ||      ||     || //    \\
+            //  //      \\||_____||      ||     ||//      \\
+            
             }
             else {
-                this.UI_on = true;
+                UI.on = true;
+
+
+
             }
             
         }

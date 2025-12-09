@@ -1,5 +1,5 @@
 import { Player } from "../gameobjects/Player.js";
-
+import { Item } from "../gameobjects/Item.js";
 export class House_1 extends Phaser.Scene {
     //apartment in the off-white yellowish brick building
     constructor() {
@@ -51,6 +51,7 @@ export class House_1 extends Phaser.Scene {
         objects.forEach(obj =>  {
             let sprite = this.objects.create(obj.x + 260, obj.y + 128, "sword").setDepth(3).setScale(0.06);//.setScale(this.MAPSCALE);
             sprite.setOrigin(1,0);
+            sprite.item = new Item("sword", 2, 4, 1, false);
             sprite.body.updateFromGameObject();
             // object defined with a name that matches a loaded image
            
@@ -77,7 +78,9 @@ export class House_1 extends Phaser.Scene {
 
         
         this.physics.add.collider(this.player, this.objects, (player, obj) => {
-            
+            if (Phaser.Input.Keyboard.JustDown(this.e)) {
+                this.scene.get('UI').on = true;
+            }
         });
 
         //------ CAMERA STUFF -------
