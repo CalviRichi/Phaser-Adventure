@@ -7,6 +7,7 @@ import { House_2 } from './scenes/House_2.js';
 import { House_3 } from './scenes/House_3.js';
 import { House_4 } from './scenes/House_4.js';
 import { UI } from './scenes/UI.js';
+import { HUD } from './scenes/HUD.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -25,6 +26,7 @@ const config = {
     },
     scene: [
         UI,
+        HUD,
         Title_Screen,
         City, 
         Player_Lair,

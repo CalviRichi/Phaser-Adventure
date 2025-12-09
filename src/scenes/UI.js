@@ -13,6 +13,7 @@ export class UI extends Phaser.Scene {
         super("UI");
 
         this.MAPSCALE = 3;
+
     }
     preload() {
         this.load.image("urban2", "assets/urban2.png");
@@ -141,7 +142,7 @@ export class UI extends Phaser.Scene {
         }).setAlpha(1).setDepth(10).setOrigin(0.5);
 
         //text for trademode
-        this.currentMoney = this.add.text(915, 385, "$$$$$",{
+        this.currentMoney = this.add.text(915, 385, "$$$$$", {
             fontSize: '32px',
             fontFamily: 'Courier New',
             color: '#ffffff',
@@ -211,6 +212,21 @@ export class UI extends Phaser.Scene {
             }
 
             this.last_tile = tile;
+        }
+        else {
+            //even if UI isn't on, the money + life counters should be showing !!!
+
+        }
+
+        //just an extra catch
+        if (this.tradeBool == false){
+            this.name.setText("");
+            this.name.setAlpha(0);
+            this.info.setText("");
+            this.info.setAlpha(0);
+            this.currentMoney.setText("$$$$$");
+            this.currentMoney.setAlpha(0);
+            this.npc.setAlpha(0);
         }
     }
 

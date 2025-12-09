@@ -55,6 +55,13 @@ export class City extends Phaser.Scene{
             .setVisible(false);
 
 
+        //------ HUD ----
+        //just making sure its active + at the top
+        if (!this.scene.isActive('HUD')){
+            this.scene.launch('HUD');
+        }
+        this.scene.bringToTop('HUD');
+        
         //------- BACKGROUND ------
         this.map = this.add.tilemap("city");
         const urban1 = this.map.addTilesetImage("urban1", "urban1");

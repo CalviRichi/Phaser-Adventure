@@ -252,6 +252,7 @@ export class Title_Screen extends Phaser.Scene {
         .on('pointerup', () => {
             this.cameras.main.fadeOut(500, 0, 0, 0);
             this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.start('HUD');
                 this.scene.start('City');
                 this.scene.stop('Title_Screen');
                 this.scene.get('City').cameras.main.fadeIn(500, 0, 0, 0);
