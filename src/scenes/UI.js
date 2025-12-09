@@ -111,6 +111,7 @@ export class UI extends Phaser.Scene {
                 }
                 
             }
+            
             else {
                 for (let i of this.inventory.items) {
                     console.log(i.name + '(' + i.origin.x + ", " + i.origin.y + ')');
@@ -212,10 +213,6 @@ export class UI extends Phaser.Scene {
             }
 
             this.last_tile = tile;
-        }
-        else {
-            //even if UI isn't on, the money + life counters should be showing !!!
-
         }
 
         //just an extra catch
