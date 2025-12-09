@@ -7,7 +7,7 @@ export class Title_Screen extends Phaser.Scene {
         super('Title_Screen');
 
         this.MAPSCALE = 2.8;
-        this.LAIRSCALE = 2.1;
+        this.LAIRSCALE = 2.3;
     }
 
     preload() {
@@ -31,6 +31,7 @@ export class Title_Screen extends Phaser.Scene {
         this.load.image("S", "assets/keyCaps/tile_0121.png");
         this.load.image("D", "assets/keyCaps/tile_0122.png");
         this.load.image("E", "assets/keyCaps/tile_0087.png");
+        this.load.image("I", "assets/keyCaps/tile_0092.png");
     }
 
     create() {
@@ -57,8 +58,8 @@ export class Title_Screen extends Phaser.Scene {
         const interior2 = this.lair.addTilesetImage("interior2", "interior2");
         const indoor = this.lair.addTilesetImage("indoor", "indoor");
         var ltileset = [urban11, urban22, interior2, indoor];
-        const lairX = 784;
-        const lairY = 315;
+        const lairX = 765;
+        const lairY = 150;
         var walls, floor, solidDecor, decor, shelfDecor, door2;
         walls = this.lair.createLayer("walls", ltileset).setDepth(5).setScale(this.LAIRSCALE).setPosition(lairX, lairY);
         floor = this.lair.createLayer("floor", ltileset).setDepth(5).setScale(this.LAIRSCALE).setPosition(lairX, lairY);
@@ -67,9 +68,12 @@ export class Title_Screen extends Phaser.Scene {
         shelfDecor = this.lair.createLayer("shelf-decor", ltileset).setDepth(8).setScale(this.LAIRSCALE).setPosition(lairX, lairY);
         door2 = this.lair.createLayer("door", ltileset).setDepth(8).setScale(this.LAIRSCALE).setPosition(lairX, lairY);
 
+        //making a "dimmer" so the background is less noticeable against the characters/text
+        this.add.rectangle(0, 0, this.scale.width, this.scale.height, 0x000000, 0.5).setOrigin(0).setScrollFactor(0).setDepth(8);
+
         //------- PLAYER ----------
         Player.createAnimations(this);
-        this.player  = new Player(this, 1130, 370, 'robber').setDepth(10).setScale(8);
+        this.player  = new Player(this, 1145, 215, 'robber').setDepth(10).setScale(8);
         //don't need setSize/setOffset cuz no collisions/threats
         //trying to set up a cool thing where the player costume switches every few seconds
         this.time.delayedCall(5000, () => {
@@ -80,8 +84,21 @@ export class Title_Screen extends Phaser.Scene {
                 loop: true //loop infinitely
             });
         });
-        //---- PLAYER
-        
+        //---- PLAYER OUTFIT TEXT ---
+        this.robberFit = this.add.text(1145, 310, '"the smooth criminal"', {
+            fontSize: '18px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setAlpha(1).setDepth(10).setOrigin(0.5);
+        this.businessFit = this.add.text(1145, 310, '"the sleazy businessman"', {
+            fontSize: '18px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setAlpha(0).setDepth(10).setOrigin(0.5);
 
         //------- CHARACTER --------
         if (!this.anims.exists("yapper")){
@@ -97,12 +114,117 @@ export class Title_Screen extends Phaser.Scene {
                 repeat: -1
             });
         }
-        this.npcYapper = this.add.sprite(100, 100, "NPCyapper").setDepth(10).setScale(8);
+        this.npcYapper = this.add.sprite(200, 250, "NPCyapper").setDepth(10).setScale(8);
         this.npcYapper.play("yapper");
 
         //-------- TITLE & CREATORS ---------
+        //title
+        this.add.text(1045, 25, "Breaking & Entering:", {
+            fontSize: '38px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setAlpha(1).setDepth(10).setOrigin(0.5);
+        this.add.text(1045, 70, "A Business Major Simulator", {
+            fontSize: '28px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setAlpha(1).setDepth(10).setOrigin(0.5);
+
+        //creators
+        this.add.text(1045, 120, "by Calvin Richards & Claire Buck", {
+            fontSize: '18px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setAlpha(1).setDepth(10).setOrigin(0.5);
 
         //------- CONTROLS ---------
+        const KEYSCALE = 3.5;
+        const startX = 250;
+        const startY = (this.scale.height / 2) + 120;
+
+        this.control = this.add.text(startX + 150, startY - 65, "CONTROLS:", {
+            fontSize: '30px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setDepth(10).setOrigin(0.5);
+        
+        //up control (W)
+        this.wsprite = this.add.sprite(startX, startY, 'W').setScale(KEYSCALE).setDepth(10);
+        this.wTxt = this.add.text(startX - 125, startY, "move up", {
+            fontSize: '20px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setDepth(10).setOrigin(0.5);
+        
+        //left control (A)
+        this.asprite = this.add.sprite(startX, startY + 75, 'A').setScale(KEYSCALE).setDepth(10);
+        this.aTxt = this.add.text(startX - 125, startY + 75, "move left", {
+            fontSize: '20px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setDepth(10).setOrigin(0.5);
+        
+        //down control (S)
+        this.ssprite = this.add.sprite(startX, startY + 150, 'S').setScale(KEYSCALE).setDepth(10);
+        this.sTxt = this.add.text(startX - 125, startY + 150, "move down", {
+            fontSize: '20px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setDepth(10).setOrigin(0.5);
+        
+        //inventory control (I)
+        this.isprite = this.add.sprite(startX + 300, startY, 'I').setScale(KEYSCALE).setDepth(10);
+        this.iTxt = this.add.text(startX + 175, startY, "open inventory", {
+            fontSize: '20px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setDepth(10).setOrigin(0.5);
+        
+        //right control (D)
+        this.dsprite = this.add.sprite(startX + 300, startY + 75, 'D').setScale(KEYSCALE).setDepth(10);
+        this.dTxt = this.add.text(startX + 175, startY + 75, "move right", {
+            fontSize: '20px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setDepth(10).setOrigin(0.5);
+        
+        //interactive stuff (E)
+        this.esprite = this.add.sprite(startX + 300, startY + 150, 'E').setScale(KEYSCALE).setDepth(10);
+        this.eTxt = this.add.text(startX + 175, startY + 150, "interact", {
+            fontSize: '20px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setDepth(10).setOrigin(0.5);
+
+
+        //----- START BUTTON ------
+        this.startButton = this.add.text(1045, 650, 'START GAME >>', {
+            fontSize: '44px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 4
+        }).setDepth(10).setOrigin(0.5).setInteractive({ useHandCursor: true });
     }
 
     changeOutfit(){ //copying similar style from Player_Lair, minus button pressing
@@ -119,17 +241,34 @@ export class Title_Screen extends Phaser.Scene {
         //forcing idle animations to change
         if (this.player.clothing == "robber"){
             this.player.play("robber_idle", true);
+            this.robberFit.setAlpha(1);
+            this.businessFit.setAlpha(0);
         }
         else {
             this.player.play("business_idle", true);
+            this.robberFit.setAlpha(0);
+            this.businessFit.setAlpha(1);
         }
     }
 
     update(time){
-        //this.scene.stop("Title_Screen");
-        //this.scene
-        if (this.player){
-            this.player.update();
-        }
+        //text grows/shrinks depending on if ur mouse is hovering over/clicking it
+        this.startButton.on('pointerover', () => {
+            this.startButton.setScale(1.2); //grow while mouse hovers over it
+        })
+        .on('pointerout', () => {
+            this.startButton.setScale(1); //return to normal if no hover
+        })
+        .on('pointerdown', () => {
+            this.startButton.setScale(0.8); //click = smaller
+        })
+        .on('pointerup', () => {
+            this.cameras.main.fadeOut(500, 0, 0, 0);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.start('City');
+                this.scene.stop('Title_Screen');
+                this.scene.get('City').cameras.main.fadeIn(500, 0, 0, 0);
+            });
+        });
     }
 }
