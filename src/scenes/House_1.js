@@ -1,5 +1,6 @@
 import { Player } from "../gameobjects/Player.js";
 import { Item } from "../gameobjects/Item.js";
+
 export class House_1 extends Phaser.Scene {
     //apartment in the off-white yellowish brick building
     constructor() {
@@ -51,7 +52,7 @@ export class House_1 extends Phaser.Scene {
         objects.forEach(obj =>  {
             let sprite = this.objects.create(obj.x + 260, obj.y + 128, "sword").setDepth(3).setScale(0.06);//.setScale(this.MAPSCALE);
             sprite.setOrigin(1,0);
-            sprite.item = new Item("sword", 2, 4, 1, false);
+            sprite.item = new Item("sword", 2, 2, 1, false);
             sprite.body.updateFromGameObject();
             // object defined with a name that matches a loaded image
            
@@ -81,10 +82,18 @@ export class House_1 extends Phaser.Scene {
 
             // ADD TEXT FOR THIS
 
+            // DO NOT ALLOW INTERACTION IF THE ITEM IS ALREADY IN THE PLAYER'S INVENTORY
+            // THIS MEANS THAT IT HAS ALREADY BEEN PICKED UP
             if (Phaser.Input.Keyboard.JustDown(this.e)) {
 
-                this.game.events.emit('tradeMode', "house_1", true); // wouldn't stay trade mode 
-                this.player.switchUI();
+                
+
+                this.game.events.emit('itemMode', "house_1", true); 
+                // send the item?
+                //console.log("name: " + obj.item.name);
+                this.scene.get('UI').trade_inventory.add(obj.item, {x: 0, y: 0});
+                this.scene.get('UI').addRectangles();
+                player.switchUI();
             }
         });
 

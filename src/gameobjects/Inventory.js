@@ -23,6 +23,22 @@ export class Inventory {
     //    this.playerData = {hp : 10}; // add more at some points
         this.weightRatio = 1;
     }
+
+
+    /**
+     * 
+     * @param {string} item - the item's name
+     * @returns {boolean} 
+     */
+    contains(item) {
+        for (let it of this.items) {
+            if (it.name == item) {
+                return true;
+            }
+        }
+
+        return false;
+    }
     
     /**
      * Adds an item to the inventory
@@ -31,6 +47,9 @@ export class Inventory {
      * @returns {void}
      */
     add(item, coord){ // item is an object
+
+        // I need to deep copy the item, but not yet
+
         item.origin.x = coord.x;
         item.origin.y = coord.y;
 

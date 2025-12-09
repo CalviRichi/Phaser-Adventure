@@ -52,6 +52,9 @@ export class UI extends Phaser.Scene {
 
         let inventory_adjust = this.inventoryMap.tileToWorldXY(2.5, 0.5);
 
+        this.trade_inventory = new Inventory(5, 3); // this is the backend to the infopopup visual
+        // items will be added / removed based on scene interactions 
+
         inventory.x += inventory_adjust.x;
         inventory.y -= inventory_adjust.y;
         
@@ -64,12 +67,14 @@ export class UI extends Phaser.Scene {
         //this.inventory.remove("test");
         //this.inventory.printMatrix();
         this.item_list = []; // this will work as a parallel to the inventory
+        this.trade_item_list = [];
         // item_list[i] corresponds to this.inventory.items[i]
 
         this.addRectangles(); // should be called every inventory call
         this.scene.setVisible(false);
 
         this.item_held_index = -1;
+        this.item_held_name = "";
 
         this.input.on('pointerdown', (pointer) => {
 
@@ -87,17 +92,23 @@ export class UI extends Phaser.Scene {
                 if (this.item_held_index != -1) { // if we are already holding an item
                     
                     let success;
-                    success = this.inventory.moveItem(this.item_held_index, adjustCoord);
+                    if (this.inventory.contains(this.item_held_name)) {
+                        success = this.inventory.moveItem(this.item_held_index, adjustCoord);
+                    }
+                    else {
+                        let I = structuredClone(this.trade_inventory.items[this.item_held_index]);
+                        success = this.inventory.add(I, adjustCoord);
+                    }
+                    
                 //    this.inventory.items[this.item_held_index].origin.x = adjustCoord.x;
                 //    this.inventory.items[this.item_held_index].origin.y = adjustCoord.y;
                    
                     if (success){
                         console.log("success");
                         this.item_held_index = -1;
+                        this.item_held_name = "";
                         this.addRectangles();
-                    }
-                    
-                    
+                    }  
                     
                 }
                 else { // if we are picking up an item
@@ -110,6 +121,7 @@ export class UI extends Phaser.Scene {
                     ) {
                         console.log("click");
                         this.item_held_index = item;
+                        this.item_held_name = this.inventory.items[item].name;
                     }
                 }
                 }
@@ -118,13 +130,58 @@ export class UI extends Phaser.Scene {
             else {
                 const infotile = this.inventoryMap.getTileAtWorldXY(pointer.x, pointer.y, true, null, 'info_popup');
 
-                if (infotile) {
-                    console.log("tile x: " + infotile.x + ", tile y: " + infotile.y, ", tile ID: " + infotile.index);
-                }
+                //if (infotile) {
+                //    console.log("tile x: " + infotile.x + ", tile y: " + infotile.y, ", tile ID: " + infotile.index);
+                //}
                 // indices are 44 and 45 
-                if (tile && (tile.index == 44 || tile.index == 45) && this.tradeBool) {
+                if (infotile && (infotile.index == 44 || infotile.index == 45)) {
+                    let adjustCoord = { x : tile.x - 14, y: tile.y - 9};
+                    // CODE FOR MOVING ITEMS IN BETWEEN THE TWO INVENTORY BOARDS   
+                    if (this.tradeBool) {
+                        
+                    }
+                    else if (this.itemBool) {
+                        console.log("Working!!!!!!!!!!");
+                    }
 
+                    if (this.item_held_index != -1) { // if we are already holding an item
+                    
+                    let success;
+                    if (this.trade_inventory.contains(this.item_held_name)) {
+                        success = this.trade_inventory.moveItem(this.item_held_index, adjustCoord);
+                    }
+                    else {
+                        success = false;
+                    }
+                    
+                //    this.inventory.items[this.item_held_index].origin.x = adjustCoord.x;
+                //    this.inventory.items[this.item_held_index].origin.y = adjustCoord.y;
+                   
+                    if (success){
+                        console.log("success");
+                        this.item_held_index = -1;
+                        this.item_held_name = "";
+                        this.addRectangles();
+                    }
+
+                    }
+                    else { // if we are picking up an item
+                    
+                    for (let item = 0; item < this.trade_inventory.items.length; item++) {
+                        if (this.trade_inventory.items[item].origin.x <= adjustCoord.x && 
+                            this.trade_inventory.items[item].origin.y <= adjustCoord.y &&
+                            this.trade_inventory.items[item].origin.x + (this.trade_inventory.items[item].vec.x - 1) >= adjustCoord.x &&
+                            this.trade_inventory.items[item].origin.y + (this.trade_inventory.items[item].vec.y - 1) >= adjustCoord.y
+                        )   {
+                            console.log("click");
+                            this.item_held_index = item;
+                            this.item_held_name = this.trade_inventory.items[item].name;
+                        }
+                    }
+                    }
                 }
+                
+
             } // if tile index is one of the ones on the right
             
             
@@ -140,6 +197,7 @@ export class UI extends Phaser.Scene {
         //------- NPC's ------
         NPC.createAnimations(this);
         this.npc = new NPC(this, 816, 240, "house_1").setDepth(10).setScale(8.5);
+
         this.name = this.add.text(1007, 190, "", {
             fontSize: '28px',
             fontFamily: 'Courier New',
@@ -163,12 +221,53 @@ export class UI extends Phaser.Scene {
             stroke: '#000000',
             strokeThickness: 3
         }).setAlpha(1).setDepth(10).setOrigin(0.5);
+
+
+        //-------- Items -----------
+        this.item_name = this.add.text(1, 1, "", { // CHANGE 1, 1 TO A REAL COORDINATE ASAP
+            fontSize: '28px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        });
+        this.item_description = this.add.text(1, 1, "", {
+            fontSize: '16px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        });
     }
 
     itemMode(location, itemMode) {
 
         if (itemMode == false) {
+            this.itemBool = false;
 
+            this.infoPopUp.setVisible(false);
+            this.item_name.setText("");
+            this.item_name.setAlpha(0);
+            this.item_description.setText("");
+            this.item_description.setAlpha(0);
+       
+        }
+
+        else {
+            this.itemBool = true; //update UI variable
+
+            //turn on all the stuff
+            this.infoPopUp.setVisible(true); //make npc info/trading area visible
+            this.item_name.setAlpha(1);
+            this.item_description.setAlpha(1);
+
+            switch (location){
+                case "house_1": 
+                    
+                    this.name.setText("Sword");
+                    this.info.setText("Seems like a valuable collector's piece...");
+                    break;
+            }
         }
 
     }
@@ -218,8 +317,14 @@ export class UI extends Phaser.Scene {
             let pointer = this.input.activePointer;
 
             if (this.item_held_index != -1) {
-                this.item_list[this.item_held_index].x = pointer.x;
-                this.item_list[this.item_held_index].y = pointer.y;
+                if (this.inventory.contains(this.item_held_name)) {
+                    this.item_list[this.item_held_index].x = pointer.x;
+                    this.item_list[this.item_held_index].y = pointer.y;
+                }
+                else {
+                    this.trade_item_list[this.item_held_index].x = pointer.x;
+                    this.trade_item_list[this.item_held_index].y = pointer.y;
+                }
             }
 
             const tile = this.inventoryMap.getTileAtWorldXY(pointer.x, pointer.y, true, null, 'peepeepoopoo');
@@ -252,7 +357,7 @@ export class UI extends Phaser.Scene {
         }
 
         //just an extra catch
-        if (this.tradeBool == false){
+        if (this.tradeBool == false && this.itemBool == false){
             this.name.setText("");
             this.name.setAlpha(0);
             this.info.setText("");
@@ -284,6 +389,9 @@ export class UI extends Phaser.Scene {
                 if (item.name == "test") {
                     itemColor = 0xff0000;
                 }
+                else if (item.name == "sword") {
+                    itemColor = 0x0000ff; // blue
+                }
                 else {
                     itemColor = 0x00ff00;
                 }
@@ -291,6 +399,39 @@ export class UI extends Phaser.Scene {
                 //console.log('adding ' + item.name + ' rectangle: ' + itemCoord.x + ", " + itemCoord.y + ", " + itemVec.x + ", " + itemVec.y);
                 this.item_list.push(rect); // i corresponds
                 //console.log("----------------");
+        }
+
+
+        for (let i = 0; i < this.trade_item_list.length; i++) {
+            this.trade_item_list[i].destroy();
+        }
+        this.trade_item_list.length = 0;
+
+        for (let i = 0; i < this.trade_inventory.items.length; i++) {
+            let item = this.trade_inventory.items[i];
+
+            let itemCoord = this.inventoryMap.tileToWorldXY(item.origin.x + 14, item.origin.y + 9); // origin
+                                                          
+        
+            let itemVec = this.inventoryMap.tileToWorldXY(item.vec.x - 2.5, item.vec.y + 0.5); // width and height
+                //console.log("item vector: " + item.vec.x + ", " + item.vec.y);
+                
+            let itemColor;
+            if (item.name == "test") {
+                itemColor = 0xff0000;
+            }
+            else if (item.name == "sword") {
+                itemColor = 0x0000ff;
+            }
+            else {
+                itemColor = 0x00ff00;
+            }
+            let rect = this.add.rectangle(itemCoord.x, itemCoord.y, itemVec.x, itemVec.y, itemColor, 0.8).setOrigin(0);
+                //console.log('adding ' + item.name + ' rectangle: ' + itemCoord.x + ", " + itemCoord.y + ", " + itemVec.x + ", " + itemVec.y);
+            this.trade_item_list.push(rect); // i corresponds
+                //console.log("----------------");
+
+
         }
 
     }
