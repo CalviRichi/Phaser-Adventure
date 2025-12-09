@@ -256,14 +256,14 @@ export class UI extends Phaser.Scene {
 
 
         //-------- Items -----------
-        this.item_name = this.add.text(1007, 190, "", { // CHANGE 1, 1 TO A REAL COORDINATE ASAP
+        this.item_name = this.add.text(800, 190, "", { // CHANGE 1, 1 TO A REAL COORDINATE ASAP
             fontSize: '28px',
             fontFamily: 'Courier New',
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3
         }).setAlpha(1).setDepth(10).setOrigin(0.5);
-        this.item_description = this.add.text(1025, 250, "", {
+        this.item_description = this.add.text(915, 338, "", {
             fontSize: '16px',
             fontFamily: 'Courier New',
             color: '#ffffff',
@@ -303,8 +303,8 @@ export class UI extends Phaser.Scene {
             switch (location){
                 case "house_1": 
                     console.log("\n\n\nHouse 1\n\n\n");
-                    this.name.setText("Sword");
-                    this.info.setText("Seems like a valuable collector's piece...");
+                    this.item_name.setText("Sword");
+                    this.item_description.setText("Seems like a valuable collector's piece...");
                     break;
             }
         }
