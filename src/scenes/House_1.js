@@ -86,14 +86,25 @@ export class House_1 extends Phaser.Scene {
             // THIS MEANS THAT IT HAS ALREADY BEEN PICKED UP
             if (Phaser.Input.Keyboard.JustDown(this.e)) {
 
-                
+                let UI = this.scene.get('UI');
 
-                this.game.events.emit('itemMode', "house_1", true); 
-                // send the item?
-                //console.log("name: " + obj.item.name);
-                this.scene.get('UI').trade_inventory.add(obj.item, {x: 0, y: 0});
-                this.scene.get('UI').addRectangles();
+                if (UI.on) {
+                    this.game.events.emit('itemMode', 'house_1', false);
+                    
+                }
+                else {
+                    this.game.events.emit('itemMode', "house_1", true); 
+                    if (!(UI.trade_inventory.contains(obj.item.name) || UI.inventory.contains(obj.item.name))) {
+                        UI.trade_inventory.add(obj.item, {x: 0, y: 0});
+                    }
+                    
+                }
+
+                UI.addRectangles();
                 player.switchUI();
+               
+                // send the item?
+                //console.log("name: " + obj.item.name)
             }
         });
 

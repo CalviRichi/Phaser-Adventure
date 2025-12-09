@@ -80,7 +80,7 @@ export class UI extends Phaser.Scene {
 
             if (!this.on) return;
 
-            console.log("click");
+          //  console.log("click");
 
        //     console.log(pointer.x + " " + pointer.y);
             const tile = this.inventoryMap.getTileAtWorldXY(pointer.x, pointer.y, true, null, 'peepeepoopoo');
@@ -88,9 +88,9 @@ export class UI extends Phaser.Scene {
             if (tile && tile.index == 113) { // if it is a valid slot tile
 
                 let adjustCoord = { x : tile.x - 3, y: tile.y - 4}; // adjusted to the dimensions of the inventory
-                
+                console.log("coordinate: " + adjustCoord.x + ", " + adjustCoord.y);
                 if (this.item_held_index != -1) { // if we are already holding an item
-                    
+                    console.log("holding item - name: " + this.item_held_name);
                     let success;
                     if (this.inventory.contains(this.item_held_name)) {
                         success = this.inventory.moveItem(this.item_held_index, adjustCoord);
@@ -104,7 +104,18 @@ export class UI extends Phaser.Scene {
                 //    this.inventory.items[this.item_held_index].origin.y = adjustCoord.y;
                    
                     if (success){
-                        console.log("success");
+
+                        if (this.trade_inventory.contains(this.item_held_name)) {
+                            this.trade_inventory.remove(this.item_held_name);
+                        }
+
+                        let value = 0;
+                        for (let item of this.trade_inventory.items) {
+                            value += item.value;
+                        }
+                        this.currentMoney.setText("$" + value);
+
+                        console.log("tile success");
                         this.item_held_index = -1;
                         this.item_held_name = "";
                         this.addRectangles();
@@ -119,7 +130,7 @@ export class UI extends Phaser.Scene {
                         this.inventory.items[item].origin.x + (this.inventory.items[item].vec.x - 1) >= adjustCoord.x &&
                         this.inventory.items[item].origin.y + (this.inventory.items[item].vec.y - 1) >= adjustCoord.y
                     ) {
-                        console.log("click");
+                     //   console.log("click");
                         this.item_held_index = item;
                         this.item_held_name = this.inventory.items[item].name;
                     }
@@ -150,6 +161,11 @@ export class UI extends Phaser.Scene {
                     if (this.trade_inventory.contains(this.item_held_name)) {
                         success = this.trade_inventory.moveItem(this.item_held_index, adjustCoord);
                     }
+                    else if (this.tradeBool){ // you can only drag to the other side if trading
+                        console.log("trading");
+                        let I = structuredClone(this.inventory.items[this.item_held_index])
+                        success = this.trade_inventory.add(I, adjustCoord);
+                    }
                     else {
                         success = false;
                     }
@@ -158,7 +174,19 @@ export class UI extends Phaser.Scene {
                 //    this.inventory.items[this.item_held_index].origin.y = adjustCoord.y;
                    
                     if (success){
-                        console.log("success");
+
+                        if (this.inventory.contains(this.item_held_name)) {
+                            this.inventory.remove(this.item_held_name);
+                        }
+
+                        let value = 0;
+                        for (let item of this.trade_inventory.items) {
+                            value += item.value;
+                        }
+                        this.currentMoney.setText("$" + value);
+
+
+                        console.log("infotile success");
                         this.item_held_index = -1;
                         this.item_held_name = "";
                         this.addRectangles();
@@ -173,7 +201,7 @@ export class UI extends Phaser.Scene {
                             this.trade_inventory.items[item].origin.x + (this.trade_inventory.items[item].vec.x - 1) >= adjustCoord.x &&
                             this.trade_inventory.items[item].origin.y + (this.trade_inventory.items[item].vec.y - 1) >= adjustCoord.y
                         )   {
-                            console.log("click");
+                         //   console.log("click");
                             this.item_held_index = item;
                             this.item_held_name = this.trade_inventory.items[item].name;
                         }
@@ -245,6 +273,13 @@ export class UI extends Phaser.Scene {
         if (itemMode == false) {
             this.itemBool = false;
 
+            //console.log("itembool off");
+
+            for (let i in this.trade_inventory.items) {
+                //console.log("removing: " + this.trade_inventory.items[i].name);
+                this.trade_inventory.remove(this.trade_inventory.items[i].name);
+            }
+ 
             this.infoPopUp.setVisible(false);
             this.item_name.setText("");
             this.item_name.setAlpha(0);
@@ -284,7 +319,7 @@ export class UI extends Phaser.Scene {
             this.name.setAlpha(0);
             this.info.setText("");
             this.info.setAlpha(0);
-            this.currentMoney.setText("$$$$$");
+            this.currentMoney.setText("$$$$");
             this.currentMoney.setAlpha(0);
             this.npc.setAlpha(0);
         }
@@ -298,12 +333,14 @@ export class UI extends Phaser.Scene {
             this.name.setAlpha(1);
             this.info.setAlpha(1);
             this.currentMoney.setAlpha(1);
+            
             this.npc.setAlpha(1);
 
             switch (location){
                 case "house_1": //yellowish brick apartment owned by layla
                     this.npc.play('h1_front');
                     this.name.setText("Layla");
+                    
                     this.info.setText("Likes cooking, \nbooks, & to \ngrow houseplants.");
                     break;
             }
@@ -427,6 +464,13 @@ export class UI extends Phaser.Scene {
                 itemColor = 0x00ff00;
             }
             let rect = this.add.rectangle(itemCoord.x, itemCoord.y, itemVec.x, itemVec.y, itemColor, 0.8).setOrigin(0);
+
+            if (this.itemBool || this.tradeBool) {
+                rect.setVisible(true);
+            }
+            else {
+                rect.setVisible(false);
+            }
                 //console.log('adding ' + item.name + ' rectangle: ' + itemCoord.x + ", " + itemCoord.y + ", " + itemVec.x + ", " + itemVec.y);
             this.trade_item_list.push(rect); // i corresponds
                 //console.log("----------------");
@@ -434,5 +478,13 @@ export class UI extends Phaser.Scene {
 
         }
 
+        //console.log("player inventory:");
+        //for (let i of this.inventory.items) {
+        //    console.log(i.name);
+        //}
+        //console.log("trade inventory:");
+        //for (let i of this.trade_inventory.items) {
+        //    console.log(i.name);
+        //}
     }
 }

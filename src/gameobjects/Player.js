@@ -255,9 +255,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
 
     switchUI() {
         let UI = this.scene.scene.get('UI');
+
+            console.log("inventory");
+            for (let i of UI.inventory.items) {
+                console.log(i.name);
+            }
+            console.log("trading");
+            for (let i of UI.trade_inventory.items) {
+                console.log(i.name);
+            }
             
             if (!UI.on) {
-                console.log("UI");
+            //    console.log("UI");
                 this.scene.scene.bringToTop('UI');
                 UI.scene.setVisible(true);
                 UI.on = true;
@@ -293,6 +302,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         if (Phaser.Input.Keyboard.JustDown(this.inventory)) {
             
             this.switchUI();
+
                                 //______
             //      /\    ||     ||    | ||     ||    /\
             //     //\\   ||     ||____| ||     ||   //\\

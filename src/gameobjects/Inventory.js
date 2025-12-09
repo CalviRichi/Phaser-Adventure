@@ -50,6 +50,8 @@ export class Inventory {
 
         // I need to deep copy the item, but not yet
 
+        let backup = item.origin;
+
         item.origin.x = coord.x;
         item.origin.y = coord.y;
 
@@ -62,7 +64,8 @@ export class Inventory {
             for (let j = coord.x; j < itemVecX; j++) {
                 if (tempMat[i][j]) {
                     console.log("placement not valid");
-                    return;
+                    item.origin = backup;
+                    return false;;
                 }
                 else {
                     tempMat[i][j] = 1; // easy solution to not bother with resetting the matrix
@@ -81,6 +84,8 @@ export class Inventory {
             }
         }
         this.weightRatio = (count) ? count : 1;
+
+        return true;
 
     }
 
