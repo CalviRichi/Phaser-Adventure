@@ -21,9 +21,24 @@ export class Player_Lair extends Phaser.Scene{
 
         //---- PLAYER -----
         Player.preload(this);
+
+        //------- SOUND ------
+        this.load.audio('bgmusic', 'assets/audio/crazy.mp3');
+        this.load.audio('door', 'assets/audio/door open.mp3');
     }
 
     create(){
+        //------ AMBIENT AUDIO ------
+        this.sound.stopAll();
+        this.bgmusic = this.sound.add('bgmusic', {
+            volume: 1.2, 
+            loop: true
+        });
+        this.bgmusic.play();
+        this.door = this.sound.add('door', {
+            volume: 2, 
+            loop: false
+        });
 
         this.sys.events.on('wake', () => {
             this.player.clothing = this.scene.get('UI').clothing;
@@ -123,9 +138,10 @@ export class Player_Lair extends Phaser.Scene{
 
             //only listen for key presses if theyre in the right area
             if (Phaser.Input.Keyboard.JustDown(this.e)){
-
+                //play sound effect
+                this.door.play();
                 this.cameras.main.fadeOut(500, 0, 0, 0);
-
+                
                 this.cameras.main.once('camerafadeoutcomplete', () => {
                     //if (this.player){
                     //    this.player.destroy();
