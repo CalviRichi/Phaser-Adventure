@@ -74,6 +74,9 @@ export class NPC extends Phaser.Physics.Arcade.Sprite {
         //create npc sprite
         scene.physics.add.existing(this);
         scene.add.existing(this);
+        this.setScale(3.3);
+        this.body.setSize(9, 10);
+        this.setOffset(1.5, 4);
 
         //figure out which one it is to play correct animation
         switch(this.npc){

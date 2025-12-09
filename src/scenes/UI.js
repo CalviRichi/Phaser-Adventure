@@ -5,6 +5,7 @@
 // is displaying
 import { Inventory } from "../gameobjects/Inventory.js";
 import { Item } from "../gameobjects/Item.js";
+import { NPC } from "../gameobjects/NPC.js";
 
 export class UI extends Phaser.Scene {
     
@@ -16,22 +17,25 @@ export class UI extends Phaser.Scene {
     preload() {
         this.load.image("urban2", "assets/urban2.png");
         this.load.tilemapTiledJSON("inventory", "assets/inventory.tmj");
+
+        //-------- NPC -------
+        NPC.preload(this);
     }
     create() {
 
         this.inventoryMap = this.add.tilemap("inventory");
         const urban2 = this.inventoryMap.addTilesetImage("urban2", "urban2");
-        var inventory, infoPopUp;
+        var inventory;
         this.inventory = new Inventory();
         inventory = this.inventoryMap.createLayer("peepeepoopoo", urban2).setScale(this.MAPSCALE);
         //infopopup should only show when player is hovering over an item in their inventory
         //this is also used in tradeMode, for slightly diff purpose
-        infoPopUp = this.inventoryMap.createLayer("info_popup", urban2).setScale(this.MAPSCALE);
-        //this.infoPopUp.setAlpha(0);
+        this.infoPopUp = this.inventoryMap.createLayer("info_popup", urban2).setScale(this.MAPSCALE);
+        this.infoPopUp.setVisible(false);
 
         this.on = false;
         
-        //this.tradeMode = false;
+        this.tradeBool = false; //this is for stuff in update
 
         this.clothing = 'robber';
 
@@ -44,8 +48,8 @@ export class UI extends Phaser.Scene {
         inventory.x += inventory_adjust.x;
         inventory.y -= inventory_adjust.y;
         
-        infoPopUp.x += inventory_adjust.x;
-        infoPopUp.y -= inventory_adjust.y;
+        this.infoPopUp.x += inventory_adjust.x;
+        this.infoPopUp.y -= inventory_adjust.y;
 
         this.inventory.add(item1, {x: 0, y: 0});
         this.inventory.add(item2, {x: 0, y : 3});
@@ -117,21 +121,68 @@ export class UI extends Phaser.Scene {
 
         //this is a listener from City.js, for detecting what mode to launch ui in
         this.game.events.on('tradeMode', this.tradeMode, this);
+
+        //------- NPC's ------
+        NPC.createAnimations(this);
+        this.npc = new NPC(this, 816, 240, "house_1").setDepth(10).setScale(8.5);
+        this.name = this.add.text(1007, 190, "", {
+            fontSize: '28px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setAlpha(1).setDepth(10).setOrigin(0.5);
+        this.info = this.add.text(1025, 250, "", {
+            fontSize: '16px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setAlpha(1).setDepth(10).setOrigin(0.5);
+
+        //text for trademode
+        this.currentMoney = this.add.text(915, 385, "$$$$$",{
+            fontSize: '32px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setAlpha(1).setDepth(10).setOrigin(0.5);
     }
 
     //trade mode re-uses ui elements for different purposes than inventory
     tradeMode(location, tradeMode){
         //false means turn it off
         if (tradeMode == false){
-            //this.infoPopUp.setAlpha(1);
+            this.tradeBool = false; //update UI local variable
+            
+            //make all the info, text, NPC invisible
+            this.infoPopUp.setVisible(false);
+            this.name.setText("");
+            this.name.setAlpha(0);
+            this.info.setText("");
+            this.info.setAlpha(0);
+            this.currentMoney.setText("$$$$$");
+            this.currentMoney.setAlpha(0);
+            this.npc.setAlpha(0);
         }
 
         //true means turn it on
         else{
-            //this.infoPopUp.setAlpha(1); //make npc info/trading area visible
+            this.tradeBool = true; //update UI variable
+
+            //turn on all the stuff
+            this.infoPopUp.setVisible(true); //make npc info/trading area visible
+            this.name.setAlpha(1);
+            this.info.setAlpha(1);
+            this.currentMoney.setAlpha(1);
+            this.npc.setAlpha(1);
+
             switch (location){
-                case "house_1": //apartment owned by
-                    
+                case "house_1": //yellowish brick apartment owned by layla
+                    this.npc.play('h1_front');
+                    this.name.setText("Layla");
+                    this.info.setText("Likes cooking, \nbooks, & to \ngrow houseplants.");
                     break;
             }
         }

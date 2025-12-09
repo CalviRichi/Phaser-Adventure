@@ -93,6 +93,15 @@ export class City extends Phaser.Scene{
         this.player.setOffset(1.5, 5.5); //change hitbox loc
         // the only layers the player DOES NOT collide with are "ground" and "decoration_noclip"
 
+
+
+
+        //  !!!!TEMP LINE FOR UI TESTING
+        this.player.clothing = "business";
+
+
+
+
         this.physics.world.setBounds(0, 0, this.MAPWIDTH, this.MAPHEIGHT);
         this.player.setCollideWorldBounds(true);
 
