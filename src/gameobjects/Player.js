@@ -150,16 +150,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         }
     }
 
-    constructor(scene, x, y, outfit='robber'){
+    constructor(scene, x, y){
 
-        let spriteOutfit;
-        if (outfit == "robber") {
-            spriteOutfit = 'robberFront';
-        }
-        else if (outfit == 'business') {
-            spriteOutfit = "businessFront";
-        }
-        super(scene, x, y, spriteOutfit, 0); //start w frame 0 of robber front by default
+        super(scene, x, y, 'robberFront', 0); //start w frame 0 of robber front by default
         /*
         The player will take in whatever state that the inventory provides it
         */
@@ -167,10 +160,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
 
         this.scene = scene;
         this.x = x; this.y = y;
-
-        this.clothing = outfit; // default = "robber"
-
-
+        this.clothing = "robber";
         this.speed = 220; //used in update() for movement (change ## to change speed)
 
         //adding physics n world colliders to player sprite
@@ -178,13 +168,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         scene.add.existing(this);
         this.setCollideWorldBounds(true);
         //play idle animation by default
-
-        if (this.clothing == 'robber') {
-            this.play('robber_idle');
-        }
-        else if (this.clothing == 'business') {
-            this.play('business_idle');
-        }
+        this.play('robber_idle');
 
         //------- KEYBOARD INPUT ------
         //detect keys here instead of in each scene
@@ -234,7 +218,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
                 }
             }
         }
-        else if (this.clothing == 'business') { //business costume
+        else { //business costume
             if (velocityX > 0){ //moving right
                 if (this.anims.currentAnim?.key !== 'business_right'){
                     this.play( 'business_right', true);
@@ -246,26 +230,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
                 }
             }
             
-            if (velocityY > 0 && velocityX == 0){ //moving up (i think??)
-                if (this.anims.currentAnim?.key !== 'business_front'){
-                    this.play( 'business_front', true);
-                }
-            }
-            else if (velocityY < 0 && velocityX == 0){ //moving down (i think??)
+            if (velocityY > 0){ //moving up (i think??)
                 if (this.anims.currentAnim?.key !== 'business_back'){
                     this.play( 'business_back', true);
                 }
             }
+            else if (velocityY < 0){ //moving down (i think??)
+                if (this.anims.currentAnim?.key !== 'business_front'){
+                    this.play( 'business_front', true);
+                }
+            }
       
             if (velocityX == 0 && velocityY == 0){ //not moving (idle)
-
-
-                /*
-                IMO, it would look a little better if there was a front idle and a back idle
-                depending on which direction the player was last facing, but it's ok to not 
-                bother with that for now 
-                */
-
                 if (this.anims.currentAnim?.key !== 'business_idle'){
                     this.play( 'business_idle', true);
                 }

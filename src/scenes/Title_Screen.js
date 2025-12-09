@@ -1,4 +1,5 @@
 import { Player } from "../gameobjects/Player.js";
+import { NPC } from "../gameobjects/NPC.js";
 
 export class Title_Screen extends Phaser.Scene {
     //creating a cute title screen w/ both city + player lair showing
@@ -19,11 +20,9 @@ export class Title_Screen extends Phaser.Scene {
         this.load.image("indoor", "assets/kennyIndoor_transparent.png");
         this.load.tilemapTiledJSON("playerLair", "assets/player_lair.tmj");
         
-        //----- PLAYER -----
+        //----- PLAYER & NPC -----
         Player.preload(this);
-
-        //------- CHARACTER -------
-        this.load.spritesheet("NPCyapper", "assets/characters/chick_right.png", { frameWidth: 11, frameHeight: 15 });
+        NPC.preload(this);
 
         //------ KEYCAPS ------
         this.load.image("W", "assets/keyCaps/tile_0086.png");
@@ -101,21 +100,9 @@ export class Title_Screen extends Phaser.Scene {
         }).setAlpha(0).setDepth(10).setOrigin(0.5);
 
         //------- CHARACTER --------
-        if (!this.anims.exists("yapper")){
-            this.anims.create({
-                key: "yapper",
-                frames: [
-                    { key: "NPCyapper", frame: 0 },
-                    { key: "NPCyapper", frame: 1 },
-                    { key: "NPCyapper", frame: 0 },
-                    { key: "NPCyapper", frame: 2 }
-                ],
-                frameRate: 5,
-                repeat: -1
-            });
-        }
-        this.npcYapper = this.add.sprite(200, 250, "NPCyapper").setDepth(10).setScale(8);
-        this.npcYapper.play("yapper");
+        NPC.createAnimations(this);
+        this.layla = new NPC(this, 200, 250, "house_1").setDepth(10).setScale(8);
+        this.layla.play("h1_right");
 
         //-------- TITLE & CREATORS ---------
         //title

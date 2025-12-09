@@ -166,6 +166,14 @@ export class City extends Phaser.Scene{
             stroke: '#000000',
             strokeThickness: 3
         }).setAlpha(0).setDepth(7).setOrigin(0.5);
+
+        this.sellPrompt = this.add.text(100, 100, "hit E to trade", {
+            fontSize: '30px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setAlpha(0).setDepth(7).setOrigin(0.5);
     }
 
     //this is for spawning cops in (this is just a looping timing function basically)
@@ -231,24 +239,44 @@ export class City extends Phaser.Scene{
             }
         }
         //house_1: (x: 1, y: 10)
-        else if (this.tileX == 1 && this.tileY == 10){
-            this.doorPrompt.setPosition(this.cameraCenterX, this.cameraCenterY);
-            this.doorPrompt.setAlpha(1);
-            if (Phaser.Input.Keyboard.JustDown(this.e)){
-                this.cameras.main.fadeOut(500, 0, 0, 0);
-                this.cameras.main.once('camerafadeoutcomplete', () => {
-                    this.scene.run('House_1');
+        else if (this.tileX == 1 && this.tileY == 10){ 
+            //robber outfit means they can start robbing house
+            if (this.player.clothing == "robber"){
+                this.doorPrompt.setPosition(this.cameraCenterX, this.cameraCenterY);
+                this.doorPrompt.setAlpha(1);
+                if (Phaser.Input.Keyboard.JustDown(this.e)){
+                    this.cameras.main.fadeOut(500, 0, 0, 0);
+                    this.cameras.main.once('camerafadeoutcomplete', () => {
+                        this.scene.run('House_1');
                     
-                    this.scene.sleep('City');
-                    this.scene.get('House_1').cameras.main.fadeIn(500, 0, 0);
-                });
+                        this.scene.sleep('City');
+                        this.scene.get('House_1').cameras.main.fadeIn(500, 0, 0);
+                    });
+                }
+            }
+            
+            //business suit means trading
+            else if (this.player.clothing == "business"){
+                this.sellPrompt.setPosition(this.cameraCenterX, this.cameraCenterY);
+                this.sellPrompt.setAlpha(1);
+                if (Phaser.Input.Keyboard.JustDown(this.e)){
+                    if (this.player.UI_on == true){ //if ui is already on, turn off
+                        this.game.events.emit('tradeMode', "house_1", false);
+                        this.player.UI_on = false;
+                    }
+                    else{ //if ui is not on, it means player wants to enter it
+                        this.game.events.emit('tradeMode', "house_1", true);
+                        this.player.UI_on = true;
+                    }
+                }         
             }
         }
         else {
             this.lairDoorPrompt.setAlpha(0);
             this.doorPrompt.setAlpha(0);
+            this.sellPrompt.setAlpha(0);
         }
-        //apartment door: (x: 1, y: 10)
+        
 
         // if (this.player.enter) {
         //     console.log("E pressed");

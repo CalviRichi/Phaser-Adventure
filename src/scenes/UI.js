@@ -25,9 +25,13 @@ export class UI extends Phaser.Scene {
         this.inventory = new Inventory();
         inventory = this.inventoryMap.createLayer("peepeepoopoo", urban2).setScale(this.MAPSCALE);
         //infopopup should only show when player is hovering over an item in their inventory
+        //this is also used in tradeMode, for slightly diff purpose
         infoPopUp = this.inventoryMap.createLayer("info_popup", urban2).setScale(this.MAPSCALE);
+        //this.infoPopUp.setAlpha(0);
 
         this.on = false;
+        
+        //this.tradeMode = false;
 
         this.clothing = 'robber';
 
@@ -111,7 +115,28 @@ export class UI extends Phaser.Scene {
 
         this.last_tile = null;
 
+        //this is a listener from City.js, for detecting what mode to launch ui in
+        this.game.events.on('tradeMode', this.tradeMode, this);
     }
+
+    //trade mode re-uses ui elements for different purposes than inventory
+    tradeMode(location, tradeMode){
+        //false means turn it off
+        if (tradeMode == false){
+            //this.infoPopUp.setAlpha(1);
+        }
+
+        //true means turn it on
+        else{
+            //this.infoPopUp.setAlpha(1); //make npc info/trading area visible
+            switch (location){
+                case "house_1": //apartment owned by
+                    
+                    break;
+            }
+        }
+    }
+
     update(time) {
 
         if (this.on) {
@@ -136,7 +161,6 @@ export class UI extends Phaser.Scene {
 
             this.last_tile = tile;
         }
-        
     }
 
     addRectangles() {

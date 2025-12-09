@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "basicCity.tmj",
+    "activeFile": "apartment.tmj",
     "expandedProjectPaths": [
         "."
     ],
@@ -16,8 +16,8 @@
             "scale": 3,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 185.66666666666666,
-                "y": 93.83333333333333
+                "x": 180.66666666666666,
+                "y": 93.5
             }
         },
         "apartment.tmj#classSet": {
@@ -150,6 +150,8 @@
     ],
     "project": "basicCityStreet.tiled-project",
     "recentFiles": [
+        "basicCity.tmj",
+        "inventory.tmj",
         "urban1.tsx",
         "urban2.tsx",
         "classSet.tsx",
@@ -157,8 +159,6 @@
         "interior2.tsx",
         "player_lair.tmj",
         "apartment.tmj",
-        "inventory.tmj",
-        "basicCity.tmj",
         "grass.tsx",
         "doorsWindows.tsx",
         "interior2/Tiled_files/Interior1.tmx"
