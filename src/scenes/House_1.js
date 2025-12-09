@@ -77,9 +77,13 @@ export class House_1 extends Phaser.Scene {
         this.physics.add.collider(this.player, door);
 
         
-        this.physics.add.collider(this.player, this.objects, (player, obj) => {
+        this.physics.add.overlap(this.player, this.objects, (player, obj) => {
+
+            // ADD TEXT FOR THIS
+
             if (Phaser.Input.Keyboard.JustDown(this.e)) {
-                this.scene.get('UI').on = true;
+            
+                this.player.switchUI();
             }
         });
 
