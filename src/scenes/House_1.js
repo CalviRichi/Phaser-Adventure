@@ -19,6 +19,8 @@ export class House_1 extends Phaser.Scene {
         this.load.image("classSet", "assets/class_tilesheet.png");
         this.load.tilemapTiledJSON("house_1", "assets/apartment.tmj");
 
+        this.load.image("sword", "assets/sword_1.png");
+
         //----- PLAYER/CHARACTERS ------
         Player.preload(this);
     }
@@ -36,14 +38,24 @@ export class House_1 extends Phaser.Scene {
         classSet.setSpacing(0, 1); //classSet has special spacing in tiled. 0 = margin, 1 = spacing
         var tileset = [urban2, interior2, indoor, classSet]; //combine all the tilesets
         //layer variables
-        var walls, floor, solidDecor, decoration, tableDecor, door;
+        var walls, floor, solidDecor, decoration, tableDecor, door, objects;
         walls = this.map.createLayer("walls", tileset).setDepth(0).setScale(this.MAPSCALE);
         floor = this.map.createLayer("floor", tileset).setDepth(0).setScale(this.MAPSCALE);
         solidDecor = this.map.createLayer("decoration-solid-obj", tileset).setDepth(1).setScale(this.MAPSCALE);
         decoration = this.map.createLayer("decoration", tileset).setDepth(2).setScale(this.MAPSCALE);
         tableDecor = this.map.createLayer("table decor", tileset).setDepth(3).setScale(this.MAPSCALE);
         door = this.map.createLayer("door", tileset).setDepth(3).setScale(this.MAPSCALE);
-
+        objects = this.map.getObjectLayer('Objects').objects;
+        
+        this.objects = this.physics.add.staticGroup();
+        objects.forEach(obj =>  {
+            let sprite = this.objects.create(obj.x + 260, obj.y + 128, "sword").setDepth(3).setScale(0.06);//.setScale(this.MAPSCALE);
+            sprite.setOrigin(1,0);
+            sprite.body.updateFromGameObject();
+            // object defined with a name that matches a loaded image
+           
+           // this.objects.push(sprite);
+        });
         //set up map collisions
         walls.setCollisionByExclusion([-1]);
         solidDecor.setCollisionByExclusion([-1]);
@@ -62,6 +74,11 @@ export class House_1 extends Phaser.Scene {
         this.physics.add.collider(this.player, walls);
         this.physics.add.collider(this.player, solidDecor);
         this.physics.add.collider(this.player, door);
+
+        
+        this.physics.add.collider(this.player, this.objects, (player, obj) => {
+            
+        });
 
         //------ CAMERA STUFF -------
         this.cameras.main.setBounds(0, 0, this.MAPWIDTH, this.MAPHEIGHT);
