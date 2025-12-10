@@ -36,6 +36,9 @@ export class Title_Screen extends Phaser.Scene {
         //--------- SOUND ---------
         this.load.audio('bgmusic', 'assets/audio/simple.mp3');
         this.load.audio('police siren', 'assets/audio/police siren.mp3');
+
+        this.load.audio('door', 'assets/audio/door open.mp3');
+        this.load.audio('lairmusic', 'assets/audio/crazy.mp3');
     }
 
     create() {

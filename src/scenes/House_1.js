@@ -24,11 +24,30 @@ export class House_1 extends Phaser.Scene {
 
         //----- PLAYER/CHARACTERS ------
         Player.preload(this);
+
+        //------AUDIO----------------
+
+     //   this.load.audio("stealing_music", "assets/audio/crazy.mp3");
     }
     create() {
 
         this.sys.events.on('wake', () => {
             this.player.clothing = this.scene.get('UI').clothing;
+            this.sound.stopAll();
+            this.bgmusic.play();
+            
+        });
+
+        this.sound.stopAll();
+            this.bgmusic = this.sound.add('lairmusic', {
+                volume: 1.2, 
+                loop: true
+            });
+        this.bgmusic.play(); // get rid of this unless it is going to be a different song eventually
+
+        this.door = this.sound.add('door', {
+            volume: 2, 
+            loop: false
         });
         //------- BACKGROUND ------
         this.map = this.add.tilemap("house_1");
@@ -52,7 +71,7 @@ export class House_1 extends Phaser.Scene {
         objects.forEach(obj =>  {
             let sprite = this.objects.create(obj.x + 260, obj.y + 128, "sword").setDepth(3).setScale(0.06);//.setScale(this.MAPSCALE);
             sprite.setOrigin(1,0);
-            sprite.item = new Item("sword", 2, 2, 1, false);
+            sprite.item = new Item("sword");
             sprite.body.updateFromGameObject();
             // object defined with a name that matches a loaded image
            
@@ -62,6 +81,8 @@ export class House_1 extends Phaser.Scene {
         walls.setCollisionByExclusion([-1]);
         solidDecor.setCollisionByExclusion([-1]);
         door.setCollisionByExclusion([-1]);
+
+        
 
         //------ PLAYER ------
         Player.createAnimations(this);
@@ -78,15 +99,35 @@ export class House_1 extends Phaser.Scene {
         this.physics.add.collider(this.player, door);
 
         
+        this.itemPrompt = this.add.text(100, 100, "hit E to pick up item", {
+            fontSize: '30px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setAlpha(0).setDepth(7).setOrigin(0.5);
+
+
         this.physics.add.overlap(this.player, this.objects, (player, obj) => {
 
             // ADD TEXT FOR THIS
 
+            let UI = this.scene.get('UI');
+
+            if (!UI.on && UI.inventory.contains(obj.item.name) || UI.soldItems.some(it => it == obj.item.name)) {
+                obj.setAlpha(0);
+            }
+
+            if (this.itemPrompt.alpha == 0) {
+                if (!(UI.inventory.contains(obj.item.name) || UI.soldItems.some(it => it == obj.item.name))) {
+                    this.itemPrompt.setPosition(this.cameraCenterX, this.cameraCenterY);
+                    this.itemPrompt.setAlpha(1);
+                }
+            }
+
             // DO NOT ALLOW INTERACTION IF THE ITEM IS ALREADY IN THE PLAYER'S INVENTORY
             // THIS MEANS THAT IT HAS ALREADY BEEN PICKED UP
-            if (Phaser.Input.Keyboard.JustDown(this.e)) {
-
-                let UI = this.scene.get('UI');
+            if (Phaser.Input.Keyboard.JustDown(this.e) && obj.alpha != 0) {
 
                 if (UI.on) {
                     this.game.events.emit('itemMode', 'house_1', false);
@@ -94,7 +135,7 @@ export class House_1 extends Phaser.Scene {
                 }
                 else {
                     this.game.events.emit('itemMode', "house_1", true); 
-                    if (!(UI.trade_inventory.contains(obj.item.name) || UI.inventory.contains(obj.item.name))) {
+                    if (!(UI.trade_inventory.contains(obj.item.name) || UI.inventory.contains(obj.item.name) || UI.soldItems.some(it => it == obj.item.name))) {
                         UI.trade_inventory.add(obj.item, {x: 0, y: 0});
                     }
                     
@@ -141,6 +182,10 @@ export class House_1 extends Phaser.Scene {
         }
    //     else { return; }
 
+        if (this.itemPrompt.alpha != 0 && !this.physics.overlap(this.player, this.objects)) {
+            this.itemPrompt.alpha = 0;
+        }
+
         //finding center coords of camera so messages can be centered
         this.cameraCenterX = this.cameras.main.scrollX + this.cameras.main.width / 2;
         this.cameraCenterY = this.cameras.main.scrollY + this.cameras.main.height / 2;
@@ -154,6 +199,7 @@ export class House_1 extends Phaser.Scene {
             this.doorPrompt.setAlpha(1);
 
             if (Phaser.Input.Keyboard.JustDown(this.e)){
+                this.door.play();
                 this.cameras.main.fadeOut(500, 0, 0, 0);
 
                 this.cameras.main.once('camerafadeoutcomplete', () => {

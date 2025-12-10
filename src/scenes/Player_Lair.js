@@ -23,18 +23,24 @@ export class Player_Lair extends Phaser.Scene{
         Player.preload(this);
 
         //------- SOUND ------
-        this.load.audio('bgmusic', 'assets/audio/crazy.mp3');
-        this.load.audio('door', 'assets/audio/door open.mp3');
+        
+        
     }
 
     create(){
         //------ AMBIENT AUDIO ------
         this.sound.stopAll();
-        this.bgmusic = this.sound.add('bgmusic', {
-            volume: 1.2, 
-            loop: true
+            this.bgmusic = this.sound.add('lairmusic', {
+                volume: 1.2, 
+                loop: true
+            });
+        this.bgmusic.play(); // get rid of this unless it is going to be a different song eventually
+        
+        this.sys.events.on('wake', () => {
+            this.sound.stopAll();
+            this.bgmusic.play();
         });
-        this.bgmusic.play();
+        
         this.door = this.sound.add('door', {
             volume: 2, 
             loop: false

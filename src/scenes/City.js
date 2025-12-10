@@ -34,6 +34,52 @@ export class City extends Phaser.Scene{
     }
 
     create(){
+
+        this.police = this.sound.add('police siren', {
+            volume: 0.8,
+            loop: false
+        });
+
+        this.sys.events.on('wake', ()=> {
+            this.sound.stopAll(); //kill any lingering music
+        this.bgmusic = this.sound.add('bgmusic', {
+            volume: 1.2,
+            loop: true
+        });
+        this.bgmusic.play();     
+        
+        this.time.delayedCall(5000, () => {
+            //play once initially
+            this.police.play();
+            this.time.addEvent({
+                delay: 13000, 
+                callback: () => {
+                    this.police.play();
+                },
+                loop: true //loop infinitely
+            });
+        });
+        });
+
+        this.time.delayedCall(5000, () => {
+            //play once initially
+            this.police.play();
+            this.time.addEvent({
+                delay: 13000, 
+                callback: () => {
+                    this.police.play();
+                },
+                loop: true //loop infinitely
+            });
+        });
+        
+
+        this.door = this.sound.add('door', {
+            volume: 2, 
+            loop: false
+        });
+        
+        
         this.last_time = 0; // copied from last project
         this.score = 0;
 
@@ -229,6 +275,7 @@ export class City extends Phaser.Scene{
             
             //only listen for key presses if they're in the right area
             if (Phaser.Input.Keyboard.JustDown(this.e)){
+                this.door.play();
                 this.cameras.main.fadeOut(500, 0, 0, 0);
                 this.cameras.main.once('camerafadeoutcomplete', () => {
 
@@ -248,6 +295,7 @@ export class City extends Phaser.Scene{
                 this.doorPrompt.setPosition(this.cameraCenterX, this.cameraCenterY);
                 this.doorPrompt.setAlpha(1);
                 if (Phaser.Input.Keyboard.JustDown(this.e)){
+                    this.door.play();
                     this.cameras.main.fadeOut(500, 0, 0, 0);
                     this.cameras.main.once('camerafadeoutcomplete', () => {
                         this.scene.run('House_1');

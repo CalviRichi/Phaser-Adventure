@@ -24,6 +24,8 @@ export class UI extends Phaser.Scene {
     }
     create() {
 
+        this.soldItems = [];
+
         this.dimmer = this.add.rectangle(0, 0, this.scale.width, this.scale.height, 0x000000, 0.5)
             .setOrigin(0)
             .setScrollFactor(0)
@@ -47,8 +49,8 @@ export class UI extends Phaser.Scene {
         this.clothing = 'robber';
 
         // (3,4) to (7,11)
-        let item1 = new Item('test', 3, 3, 1, true);
-        let item2 = new Item('next', 2, 4, 1, true);
+        let item1 = new Item('backpack');
+        let item2 = new Item('golf clubs');
 
         let inventory_adjust = this.inventoryMap.tileToWorldXY(2.5, 0.5);
 
@@ -183,6 +185,7 @@ export class UI extends Phaser.Scene {
                     if (success){
 
                         if (this.inventory.contains(this.item_held_name)) {
+                            this.soldItems.push(this.item_held_name);
                             this.inventory.remove(this.item_held_name);
                         }
 
@@ -261,15 +264,15 @@ export class UI extends Phaser.Scene {
 
 
         //-------- Items -----------
-        this.item_name = this.add.text(800, 190, "", { // CHANGE 1, 1 TO A REAL COORDINATE ASAP
-            fontSize: '28px',
+        this.item_name = this.add.text(905, 383, "", { // CHANGE 1, 1 TO A REAL COORDINATE ASAP
+            fontSize: '35px',
             fontFamily: 'Courier New',
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3
         }).setAlpha(1).setDepth(10).setOrigin(0.5);
         this.item_description = this.add.text(915, 338, "", {
-            fontSize: '16px',
+            fontSize: '20px',
             fontFamily: 'Courier New',
             color: '#ffffff',
             stroke: '#000000',
@@ -308,8 +311,7 @@ export class UI extends Phaser.Scene {
             switch (location){
                 case "house_1": 
                     console.log("\n\n\nHouse 1\n\n\n");
-                    this.item_name.setText("Sword");
-                    this.item_description.setText("Seems like a valuable collector's piece...");
+                    
                     break;
             }
         }
@@ -406,6 +408,45 @@ export class UI extends Phaser.Scene {
 
             this.last_info_tile = infotile;
 
+
+            // tile, pointer, and infotile are all valid here
+
+            let showing_info = false;
+
+            for (let index in this.item_list) {
+                let r = this.item_list[index].getBounds();
+                if (Phaser.Geom.Rectangle.Contains(r, pointer.x, pointer.y) && !this.tradeBool) {
+
+                    this.infoPopUp.setVisible(true);
+                    this.item_name.setText(this.inventory.items[index].name);
+                    this.item_name.setAlpha(1);
+                    this.item_description.setText(this.inventory.items[index].description);
+                    this.item_description.setAlpha(1);
+
+                    showing_info = true;
+                }
+            }
+
+            for (let index in this.trade_item_list) {
+                let r = this.trade_item_list[index].getBounds();
+                if (Phaser.Geom.Rectangle.Contains(r, pointer.x, pointer.y) && !this.tradeBool) {
+                    this.infoPopUp.setVisible(true);
+                    this.item_name.setText(this.trade_inventory.items[index].name);
+                    this.item_name.setAlpha(1);
+                    this.item_description.setText(this.trade_inventory.items[index].description);
+                    this.item_description.setAlpha(1);
+
+                    showing_info = true;
+                }
+            }
+
+            if (!(this.itemBool || this.tradeBool || showing_info)) {
+                this.infoPopUp.setVisible(false);
+                this.item_name.setAlpha(0);
+                this.item_description.setAlpha(0);
+
+            }
+
             /*
 
             for loop over rectangles in EITHER inventory, show descriptions if hovering over
@@ -447,17 +488,9 @@ export class UI extends Phaser.Scene {
                 let itemVec = this.inventoryMap.tileToWorldXY(item.vec.x - 2.5, item.vec.y + 0.5); // width and height
                 //console.log("item vector: " + item.vec.x + ", " + item.vec.y);
                 
-                let itemColor;
-                if (item.name == "test") {
-                    itemColor = 0xff0000;
-                }
-                else if (item.name == "sword") {
-                    itemColor = 0x0000ff; // blue
-                }
-                else {
-                    itemColor = 0x00ff00;
-                }
-                let rect = this.add.rectangle(itemCoord.x, itemCoord.y, itemVec.x, itemVec.y, itemColor, 0.8).setOrigin(0);
+                
+               
+                let rect = this.add.rectangle(itemCoord.x, itemCoord.y, itemVec.x, itemVec.y, item.color, 0.8).setOrigin(0);
                 //console.log('adding ' + item.name + ' rectangle: ' + itemCoord.x + ", " + itemCoord.y + ", " + itemVec.x + ", " + itemVec.y);
                 this.item_list.push(rect); // i corresponds
                 //console.log("----------------");
@@ -477,18 +510,8 @@ export class UI extends Phaser.Scene {
         
             let itemVec = this.inventoryMap.tileToWorldXY(item.vec.x - 2.5, item.vec.y + 0.5); // width and height
                 //console.log("item vector: " + item.vec.x + ", " + item.vec.y);
-                
-            let itemColor;
-            if (item.name == "test") {
-                itemColor = 0xff0000;
-            }
-            else if (item.name == "sword") {
-                itemColor = 0x0000ff;
-            }
-            else {
-                itemColor = 0x00ff00;
-            }
-            let rect = this.add.rectangle(itemCoord.x, itemCoord.y, itemVec.x, itemVec.y, itemColor, 0.8).setOrigin(0);
+           
+            let rect = this.add.rectangle(itemCoord.x, itemCoord.y, itemVec.x, itemVec.y, item.color, 0.8).setOrigin(0);
 
             if (this.itemBool || this.tradeBool) {
                 rect.setVisible(true);
