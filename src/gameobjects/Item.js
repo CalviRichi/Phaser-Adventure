@@ -30,20 +30,20 @@ export class Item {
             case "backpack":
                 this.vec = {x: 3, y: 3};
                 this.value = 10;
-                this.description = "A fairly basic backpack, in pretty good condition";
+                this.description = "A fairly basic backpack, \nin pretty good condition";
                 this.color = 0xff0000; // red
                 break;
             case "golf clubs":
                 this.vec = {x: 2, y: 3};
                 this.value = 15;
-                this.description = "Some expensive looking golf clubs, fairly used though";
+                this.description = "Some expensive looking golf clubs, \nfairly used though";
                 this.color = 0x00ff00; // green
                 break;
             case "sword":
                 this.vec = {x: 1, y: 3};
                 this.value = 20;
                 this.color = 0x0000ff; // blue
-                this.description = "This thing looks like a collector's item!";
+                this.description = "This thing looks like \na collector's item!";
                 break;
             default:
                 this.name = "item_" + Item.count;

@@ -25,6 +25,7 @@ export class UI extends Phaser.Scene {
     create() {
 
         this.soldItems = [];
+        this.score_to_add = 0;
 
         this.dimmer = this.add.rectangle(0, 0, this.scale.width, this.scale.height, 0x000000, 0.5)
             .setOrigin(0)
@@ -109,6 +110,11 @@ export class UI extends Phaser.Scene {
                     if (success){
 
                         if (this.trade_inventory.contains(this.item_held_name)) {
+                            for (let it in this.soldItems) {
+                                if (this.soldItems[it] == this.item_held_name) {
+                                    this.soldItems.splice(it, 1); // no longer selling those items
+                                }
+                            }
                             this.trade_inventory.remove(this.item_held_name);
                         }
 
@@ -119,7 +125,7 @@ export class UI extends Phaser.Scene {
                             value += item.value;
                         }
                         this.currentMoney.setText("$" + value);
-
+                        
                         console.log("tile success");
                         this.item_held_index = -1;
                         this.item_held_name = "";
@@ -194,10 +200,11 @@ export class UI extends Phaser.Scene {
                         let value = 0;
                         for (let item of this.trade_inventory.items) {
                             value += item.value;
+                          //  console.log("value: " + value);
                         }
                         this.currentMoney.setText("$" + value);
 
-
+                        this.score_to_add = value;
                         console.log("infotile success");
                         this.item_held_index = -1;
                         this.item_held_name = "";
@@ -262,6 +269,14 @@ export class UI extends Phaser.Scene {
             strokeThickness: 3
         }).setAlpha(1).setDepth(10).setOrigin(0.5);
 
+        this.tradeWarning = this.add.text(915, 340, "Press 'E' or 'I' to accept sale!", {
+            fontSize: '20px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setAlpha(1).setDepth(10).setOrigin(0.5);
+
 
         //-------- Items -----------
         this.item_name = this.add.text(905, 383, "", { // CHANGE 1, 1 TO A REAL COORDINATE ASAP
@@ -271,7 +286,7 @@ export class UI extends Phaser.Scene {
             stroke: '#000000',
             strokeThickness: 3
         }).setAlpha(1).setDepth(10).setOrigin(0.5);
-        this.item_description = this.add.text(915, 338, "", {
+        this.item_description = this.add.text(920, 195, "", {
             fontSize: '20px',
             fontFamily: 'Courier New',
             color: '#ffffff',
@@ -322,13 +337,22 @@ export class UI extends Phaser.Scene {
     tradeMode(location, tradeMode){
         //false means turn it off
         if (tradeMode == false){
+
             this.tradeBool = false; //update UI local variable
 
             for (let i in this.trade_inventory.items) {
                 //console.log("removing: " + this.trade_inventory.items[i].name);
+                
                 this.trade_inventory.remove(this.trade_inventory.items[i].name);
+                // if sold, add value
             }
-            
+        
+            //this.game.events.emit('updateMoney', this.score_to_add);
+            this.scene.get("HUD").totalMoney += this.score_to_add;
+            this.game.events.emit('updateMoney', 0);
+            console.log("score to add: " + this.score_to_add);
+            this.score_to_add = 0;
+
             //make all the info, text, NPC invisible
             this.infoPopUp.setVisible(false);
             this.name.setText("");
@@ -338,6 +362,7 @@ export class UI extends Phaser.Scene {
             this.currentMoney.setText("$$$$");
             this.currentMoney.setAlpha(0);
             this.npc.setAlpha(0);
+            this.tradeWarning.setAlpha(0);
         }
 
         //true means turn it on
@@ -349,6 +374,9 @@ export class UI extends Phaser.Scene {
             this.name.setAlpha(1);
             this.info.setAlpha(1);
             this.currentMoney.setAlpha(1);
+            this.tradeWarning.setAlpha(1);
+            this.item_name.setAlpha(0);
+            this.item_description.setAlpha(0);
             
             this.npc.setAlpha(1);
 
@@ -442,9 +470,12 @@ export class UI extends Phaser.Scene {
 
             if (!(this.itemBool || this.tradeBool || showing_info)) {
                 this.infoPopUp.setVisible(false);
+
+            }
+
+            if (!showing_info) {
                 this.item_name.setAlpha(0);
                 this.item_description.setAlpha(0);
-
             }
 
             /*
@@ -467,6 +498,7 @@ export class UI extends Phaser.Scene {
             this.info.setAlpha(0);
             this.currentMoney.setText("$$$$$");
             this.currentMoney.setAlpha(0);
+            this.tradeWarning.setAlpha(0);
             this.npc.setAlpha(0);
         }
     }

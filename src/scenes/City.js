@@ -312,7 +312,12 @@ export class City extends Phaser.Scene{
                 this.sellPrompt.setAlpha(1);
                 if (Phaser.Input.Keyboard.JustDown(this.e)){
                     if (this.scene.get('UI').on == true){ //if ui is already on, turn off
+                        //this.game.events.emit('updateMoney', this.scene.get('UI').score_to_add);
+                        //console.log("score to add " + this.scene.get('UI'.score_to_add));
+                        //this.scene.get('UI').score_to_add = 0;
                         this.game.events.emit('tradeMode', "house_1", false);
+
+                        
 
                         
                     }

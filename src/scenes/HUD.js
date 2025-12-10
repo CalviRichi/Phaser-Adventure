@@ -53,6 +53,7 @@ export class HUD extends Phaser.Scene {
 
     updateMoney(amount){
         this.totalMoney += amount;
+        console.log(this.totalMoney);
         this.moneyCounter.setText("$" + this.totalMoney + ".00");
     }
 
