@@ -125,6 +125,7 @@ export class UI extends Phaser.Scene {
                             value += item.value;
                         }
                         this.currentMoney.setText("$" + value);
+                        this.score_to_add = value;
                         
                         console.log("tile success");
                         this.item_held_index = -1;
