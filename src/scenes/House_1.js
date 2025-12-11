@@ -22,6 +22,8 @@ export class House_1 extends Phaser.Scene {
 
         this.load.image("sword", "assets/sword_1.png");
 
+        this.load.image("juice", "assets/juice.png");
+
         //----- PLAYER/CHARACTERS ------
         Player.preload(this);
 

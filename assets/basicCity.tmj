@@ -154,7 +154,7 @@
             0, 0, 1130, 0, 0, 1091, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             1024, 0, 1021, 0, 0, 984, 0, 0, 0, 0, 0, 0, 0, 1089, 0, 781, 782,
             1098, 0, 1095, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1142, 924, 924, 1142,
-            0, 0, 0, 632, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1166, 0, 0, 0,
+            0, 0, 0, 632, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":16,
          "id":2,
@@ -165,9 +165,50 @@
          "width":17,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":7,
+         "name":"objects",
+         "objects":[
+                {
+                 "gid":303,
+                 "height":16,
+                 "id":1,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"cash_box"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":255.666666666667,
+                 "y":252
+                }, 
+                {
+                 "gid":980,
+                 "height":16,
+                 "id":2,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":70,
+                 "y":239.333333333333
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":7,
- "nextobjectid":1,
+ "nextlayerid":8,
+ "nextobjectid":3,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

@@ -36,6 +36,9 @@ export class City extends Phaser.Scene{
         this.load.image("urban2", "assets/urban2.png");
         this.load.tilemapTiledJSON("city", "assets/basicCity.tmj"); // works
 
+        this.load.image("trash", "assets/kenney_roguelike-modern-city/Tiles/tile_0493.png");
+        this.load.image('cash_box', "assets/kenney_rpg-urban-pack/Tiles/tile_0302.png");
+
         //------- PLAYER/CHARACTERS -----
         Player.preload(this);
         Cop.preload(this);
