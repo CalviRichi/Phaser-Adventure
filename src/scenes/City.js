@@ -346,6 +346,17 @@ export class City extends Phaser.Scene{
             if (cop && cop.isAggressive == false){
                 if (cop.checkPlayerInRange(this.player) == true){
                     cop.becomeAggressive(this.player);
+                    if (!this.copsAggressive){
+                        this.copsAggressive = true;
+                        this.policeAlert.setAlpha(1);
+                        this.police.play();
+
+                        if (this.copSpawnTimer){
+                            this.copSpawnTimer.remove();
+                            this.spawnRate = this.aggroSpawnRate;
+                            this.startSpawning();
+                        }
+                    }
                 }
             }
             
@@ -356,8 +367,20 @@ export class City extends Phaser.Scene{
                 if (grrCop.checkPlayerInRange(this.player) == false || grrCop.isPlayerFarEnough(this.player) == true){
                     grrCop.resetCops();
                 }
+                else {
+                    this.aggressiveCops.splice(index, 1);
+                }
             }
         });
+        if (this.aggressiveCops.length == 0 && this.copsAggressive){
+            this.copsAggressive = false;
+            this.police.stop();
+            if (this.copSpawnTimer){
+                this.copSpawnTimer.remove();
+                this.spawnRate = 5000; //reset it
+                this.startSpawning();
+            }
+        }
     }
 
     enterHouse(house) {

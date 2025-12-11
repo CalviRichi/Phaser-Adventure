@@ -67,7 +67,6 @@ export class Cop extends Phaser.Physics.Arcade.Sprite {
         
         //variables
         this.scene = scene;
-        this.location = location;
         this.x = x;
         this.y = y;
         this.speed = 85; //pixels per sec
@@ -115,7 +114,7 @@ export class Cop extends Phaser.Physics.Arcade.Sprite {
     //methods for aggressive cops
     checkPlayerInRange(player){
         //check player exists & is wearing the correct clothes
-        if (!player || player.clothing == business){
+        if (!player || player.clothing == "business"){
             return false;
         }
         const distance =  Phaser.Math.Distance.Between(this.x, this.y, player.x, player.y); //cop x/y to player x/y
@@ -123,7 +122,7 @@ export class Cop extends Phaser.Physics.Arcade.Sprite {
     }
     //cops enter aggressive state (start chasing player, and can damage player)
     becomeAggressive(player){
-        if (this.isAggressive == true){ return; } //if alr true, return
+        if (this.isAggressive == true || !this.active){ return; } //if alr true, return
         this.isAggressive = true;
         this.target = player;
         this.speed += 50; //i want cops to move slightly faster when aggro
