@@ -125,15 +125,15 @@ export class City extends Phaser.Scene{
         
                     console.log(obj.properties.find(p => p.name === "name").value);
                     if (obj.properties.find(p => p.name === "name").value == "trash") {
-                        adjustX = 240;
-                        adjustY = 400;
-                        obScale = 1;
+                        adjustX = 210;
+                        adjustY = 450;
+                        obScale = 2.5;
                         obname = "trash";
                     }
                     else if (obj.properties.find(p => p.name === "name").value == "cash_box") {
-                        adjustX = 160;
-                        adjustY = 100;
-                        obScale = 1;
+                        adjustX = 550;
+                        adjustY = 530;
+                        obScale = 2.5;
                         obname = "cash_box";
                     }
                     
@@ -213,12 +213,18 @@ export class City extends Phaser.Scene{
                 if (!(UI.inventory.contains(obj.item.name) || UI.soldItems.some(it => it == obj.item.name))) {
                     this.itemPrompt.setPosition(this.cameraCenterX, this.cameraCenterY);
                     this.itemPrompt.setAlpha(1);
+                    if (player.clothing == "robber") {
+                        this.itemPrompt.setText("hit E to pick up item");
+                    }
+                    else {
+                        this.itemPrompt.setText('only a robber can pick up items!');
+                    }
                 }
             }
 
             // DO NOT ALLOW INTERACTION IF THE ITEM IS ALREADY IN THE PLAYER'S INVENTORY
             // THIS MEANS THAT IT HAS ALREADY BEEN PICKED UP
-            if (Phaser.Input.Keyboard.JustDown(this.e) && obj.alpha != 0) {
+            if (Phaser.Input.Keyboard.JustDown(this.e) && obj.alpha != 0 && player.clothing == 'robber') {
 
                 if (UI.on) {
                     this.game.events.emit('itemMode', 'city', false);
