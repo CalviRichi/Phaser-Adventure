@@ -260,6 +260,13 @@ export class City extends Phaser.Scene{
 
         //call player update to allow movement/animation change
         this.player.update();
+
+        this.cop_group.getChildren().forEach(cop => {
+            if (cop && cop.update) {
+                cop.update();
+            }
+        });
+
         //center coords of camera
         this.cameraCenterX = this.cameras.main.scrollX + this.cameras.main.width / 2;
         this.cameraCenterY = this.cameras.main.scrollY + this.cameras.main.height / 2;
@@ -342,7 +349,7 @@ export class City extends Phaser.Scene{
      //   console.log(this.player.x + ", " + this.player.y);
 
         //AGGRO'ING COPS
-        this.cop_group.getChildren(cop => {
+        this.cop_group.getChildren().forEach(cop => {
             if (cop && cop.isAggressive == false){
                 if (cop.checkPlayerInRange(this.player) == true){
                     cop.becomeAggressive(this.player);
@@ -368,7 +375,8 @@ export class City extends Phaser.Scene{
                     grrCop.resetCops();
                 }
                 else {
-                    this.aggressiveCops.splice(index, 1);
+                    this.aggressiveCops = this.aggressiveCops.filter(c => c.isAggressive);
+
                 }
             }
         });
