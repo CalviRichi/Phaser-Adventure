@@ -271,6 +271,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
     switchUI() {
         let UI = this.scene.scene.get('UI');
 
+            if (UI.item_held_index != -1) return;
+
             console.log("inventory");
             for (let i of UI.inventory.items) {
                 console.log(i.name);
