@@ -46,6 +46,7 @@ export class HUD extends Phaser.Scene {
         this.health = 100;
 
         this.won = false;
+        this.gameOverTriggered = false;
 
         //-------- LISTENERS ------
         //money update
@@ -113,7 +114,8 @@ export class HUD extends Phaser.Scene {
             this.moneyWin.setAlpha(1);
         }
 
-        if (this.totalMoney >= 100 || this.timesArrested > 2){
+        if (!this.gameOverTriggered && this.totalMoney >= 100 || this.timesArrested > 2){
+            this.gameOverTriggered = true;
             this.time.delayedCall(4000, () => {
                 this.cameras.main.fadeOut(500, 0, 0, 0);
                 this.cameras.main.once('camerafadeoutcomplete', () => {
