@@ -22,11 +22,12 @@ export class City extends Phaser.Scene{
         //the following variables are for when cops r aggressive to player
         this.copsAggressive = false; //keep track when aggressive mode
         this.aggressiveTimer = null; //cooldown timer for cops to go back to normal mode (if player gets away yk)
-        this.copRange = 150; //range that cops can detect player/range for if player is far enough away for cops to not be aggro
+        this.copRange = 120; //range that cops can detect player/range for if player is far enough away for cops to not be aggro
         this.escapeTime = 4000; //how many seconds player need to be out of cop range
         this.aggroSpawnRate = 1000; //how often cops will spawn when aggro
         this.copAttackRate = 1000; //how often cops can damage player 
         this.lastDamageTime = 0; //to help keep track of copAttackRate
+        this.aggressiveCops = []; //keep track of which cops r aggressive at any point
     }
 
     preload(){
@@ -55,19 +56,6 @@ export class City extends Phaser.Scene{
             });
             this.bgmusic.play();     
         });
-
-        this.time.delayedCall(5000, () => {
-            //play once initially
-            this.police.play();
-            this.time.addEvent({
-                delay: 13000, 
-                callback: () => {
-                    this.police.play();
-                },
-                loop: true //loop infinitely
-            });
-        });
-        
 
         this.door = this.sound.add('door', {
             volume: 2, 
@@ -105,21 +93,22 @@ export class City extends Phaser.Scene{
         const urban2 = this.map.addTilesetImage("urban2", "urban2");
         var tileset = [urban1, urban2];
 
-        var door, cars, decoration, decoration_noclip, buildings, ground;
+        //var door, cars, decoration, decoration_noclip, buildings, ground;
+        //gotta change em from vars cuz i need to access them elsewhere (cop spawning area)
 
       //  const UI = scene.get("UI");
         
-        door = this.map.createLayer("door", tileset).setDepth(3).setScale(this.MAPSCALE);
-        cars = this.map.createLayer("cars", tileset).setDepth(2).setScale(this.MAPSCALE);
-        decoration = this.map.createLayer("decoration", tileset).setDepth(2).setScale(this.MAPSCALE);
-        decoration_noclip = this.map.createLayer("decoration_noclip", tileset).setDepth(2).setScale(this.MAPSCALE);
-        buildings = this.map.createLayer("buildings", tileset).setDepth(1).setScale(this.MAPSCALE);
-        ground = this.map.createLayer("ground", tileset).setDepth(0).setScale(this.MAPSCALE);
+        this.door = this.map.createLayer("door", tileset).setDepth(3).setScale(this.MAPSCALE);
+        this.cars = this.map.createLayer("cars", tileset).setDepth(2).setScale(this.MAPSCALE);
+        this.decoration = this.map.createLayer("decoration", tileset).setDepth(2).setScale(this.MAPSCALE);
+        this.decoration_noclip = this.map.createLayer("decoration_noclip", tileset).setDepth(2).setScale(this.MAPSCALE);
+        this.buildings = this.map.createLayer("buildings", tileset).setDepth(1).setScale(this.MAPSCALE);
+        this.ground = this.map.createLayer("ground", tileset).setDepth(0).setScale(this.MAPSCALE);
 
-        buildings.setCollisionByExclusion([-1]); 
-        door.setCollisionByExclusion([-1]);
-        cars.setCollisionByExclusion([-1]);
-        decoration.setCollisionByExclusion([-1]); // can maybe get rid of the other decoration layer by properly setting up collision with the tiles
+        this.buildings.setCollisionByExclusion([-1]); 
+        this.door.setCollisionByExclusion([-1]);
+        this.cars.setCollisionByExclusion([-1]);
+        this.decoration.setCollisionByExclusion([-1]); // can maybe get rid of the other decoration layer by properly setting up collision with the tiles
         
         //------- COPARONIES -----
         Cop.createAnimations(this);
@@ -140,26 +129,27 @@ export class City extends Phaser.Scene{
         this.physics.world.setBounds(0, 0, this.MAPWIDTH, this.MAPHEIGHT);
         this.player.setCollideWorldBounds(true);
 
-        this.physics.add.collider(this.player, buildings, (player, tile) => {
+        this.physics.add.collider(this.player, this.buildings, (player, tile) => { 
            // console.log("building");
         });
         
-        this.physics.add.collider(this.player, door, (player, tile) => {
+        this.physics.add.collider(this.player, this.door, (player, tile) => {
         //    console.log(tile.index);    
             if ( player.enter && (tile.index == 310 || tile.index == 1506 || tile.index == 1435 || tile.index == 1436)) {
                 player.x -= 200;
             } 
         });
         
-        this.physics.add.collider(this.player, cars, (player, tile) => {
+        this.physics.add.collider(this.player, this.cars, (player, tile) => {
 
         });
-        this.physics.add.collider(this.player, decoration, (player, tile) => {
+        this.physics.add.collider(this.player, this.decoration, (player, tile) => {
 
         });
         
         //add colliders between player n cops so its harder to escape them (and can call a function)
-        this.physics.add.collider(this.player, this.cop_group, (player, cop) => {
+        //add OVERLAP (collision makes cops act like ping pong balls when u run into them)
+        this.physics.add.overlap(this.player, this.cop_group, (player, cop) => {
             this.playerCopCollision(player, cop); //also cops can only attack player if they r colliding
         });
 
@@ -197,6 +187,14 @@ export class City extends Phaser.Scene{
             stroke: '#000000',
             strokeThickness: 3
         }).setAlpha(0).setDepth(7).setOrigin(0.5);
+
+        this.policeAlert = this.add.text(this.cameras.main.width/2, this.cameras.main.height/2, "!! police alerted !!", {
+            fontSize: '30px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setAlpha(0).setDepth(7).setOrigin(0.5);
     }
 
     playerCopCollision(player, cop){
@@ -208,13 +206,16 @@ export class City extends Phaser.Scene{
         //cop can only attack (damage player) when in collision w/ them
         //also, they can only attack if they have had enough cooldown time since their last attack (this.copAttackRate being the cooldown time)
         const currentTime = this.time.now;
-        if (currentTime - this.lastDamageTime > this.damageCooldown){
+        if (currentTime - this.lastDamageTime > this.copAttackRate){
             this.player.health -= 10; //update player health (low health is tracked n will trigger endgame condition in HUD)
             this.game.events.emit('health_update', this.player.health); //update HUD
             this.lastDamageTime = currentTime; //update damage counter
 
             //this is to give some visual feedback to player (JUICE)(#red40)
-            this.cameras.main.flash(300, 255, 0, 0);
+            this.player.setTint(0xff0000); //red
+            this.time.delayedCall(300, () => {
+                this.player.clearTint(); //get rid of tint after short time to look like flashing
+            });
         }
     }
 
@@ -247,6 +248,10 @@ export class City extends Phaser.Scene{
         }
         const cop = new Cop(this, this.coordx, -10); //y spawn slightly off-screen
         this.cop_group.add(cop);
+        //add collisions w buildings, cars, decoration
+        this.physics.add.collider(cop, this.buildings);
+        this.physics.add.collider(cop, this.cars);
+        //this.physics.add.collider(cop, this.decoration);
     }
 
     update(time){
