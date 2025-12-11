@@ -45,6 +45,24 @@ export class Item {
                 this.color = 0x0000ff; // blue
                 this.description = "This thing looks like \na collector's item!";
                 break;
+            case "juice": // 2 x 2
+                this.vec = {x: 2, y: 2};
+                this.value = 15;
+                this.color = 0xdd00ee;
+                this.description = "This looks way more\nexpensive than it\nshould be...";
+                break;
+            case "trash": // 2 x 3
+                this.vec = {x : 2, y: 3};
+                this.value = 5;
+                this.color = 0x888888;
+                this.description = "It's a bag of trash...";
+                break;
+            case "cash_box": // 5 x 3 big boy
+                this.vec = {x: 5, y: 3};
+                this.value = 40;
+                this.color = 0x00dd00;
+                this.description = "A giant box of cash!! \nThis thing looks heavy!"
+                break;
             default:
                 this.name = "item_" + Item.count;
                 this.vec = {x: 2, y: 2};

@@ -194,12 +194,18 @@
                  "height":16,
                  "id":2,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"trash"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":16,
-                 "x":70,
-                 "y":239.333333333333
+                 "x":71.3333333333333,
+                 "y":240
                 }],
          "opacity":1,
          "type":"objectgroup",

@@ -1,6 +1,7 @@
 import { Cop } from "../gameobjects/Cop.js";
 import { Player } from "../gameobjects/Player.js";
 import { Bullet } from "../gameobjects/Bullet.js";
+import { Item } from "../gameobjects/Item.js";
 
 export class City extends Phaser.Scene{
     constructor(){
@@ -112,6 +113,39 @@ export class City extends Phaser.Scene{
         this.door.setCollisionByExclusion([-1]);
         this.cars.setCollisionByExclusion([-1]);
         this.decoration.setCollisionByExclusion([-1]); // can maybe get rid of the other decoration layer by properly setting up collision with the tiles
+
+        this.objects_layer = this.map.getObjectLayer('objects').objects;
+                
+                this.objects = this.physics.add.staticGroup();
+                this.objects_layer.forEach(obj =>  {
+        
+                    let obname;
+                    let adjustX; let adjustY;
+                    let obScale;
+        
+                    console.log(obj.properties.find(p => p.name === "name").value);
+                    if (obj.properties.find(p => p.name === "name").value == "trash") {
+                        adjustX = 240;
+                        adjustY = 400;
+                        obScale = 1;
+                        obname = "trash";
+                    }
+                    else if (obj.properties.find(p => p.name === "name").value == "cash_box") {
+                        adjustX = 160;
+                        adjustY = 100;
+                        obScale = 1;
+                        obname = "cash_box";
+                    }
+                    
+        
+                    let sprite = this.objects.create(obj.x + adjustX, obj.y + adjustY, obname).setDepth(3).setScale(obScale);//.setScale(this.MAPSCALE);
+                    sprite.setOrigin(1,0);
+                    sprite.item = new Item(obname);
+                    sprite.body.updateFromGameObject();
+                    // object defined with a name that matches a loaded image
+                   
+                   // this.objects.push(sprite);
+                });
         
         //------- COPARONIES -----
         Cop.createAnimations(this);
@@ -154,6 +188,56 @@ export class City extends Phaser.Scene{
         //add OVERLAP (collision makes cops act like ping pong balls when u run into them)
         this.physics.add.overlap(this.player, this.cop_group, (player, cop) => {
             this.playerCopCollision(player, cop); //also cops can only attack player if they r colliding
+        });
+
+        this.itemPrompt = this.add.text(100, 100, "hit E to pick up item", {
+            fontSize: '30px',
+            fontFamily: 'Courier New',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setAlpha(0).setDepth(7).setOrigin(0.5);
+
+
+        this.physics.add.overlap(this.player, this.objects, (player, obj) => {
+
+            // ADD TEXT FOR THIS
+
+            let UI = this.scene.get('UI');
+
+            if (!UI.on && UI.inventory.contains(obj.item.name) || UI.soldItems.some(it => it == obj.item.name)) {
+                obj.setAlpha(0);
+            }
+
+            if (this.itemPrompt.alpha == 0) {
+                if (!(UI.inventory.contains(obj.item.name) || UI.soldItems.some(it => it == obj.item.name))) {
+                    this.itemPrompt.setPosition(this.cameraCenterX, this.cameraCenterY);
+                    this.itemPrompt.setAlpha(1);
+                }
+            }
+
+            // DO NOT ALLOW INTERACTION IF THE ITEM IS ALREADY IN THE PLAYER'S INVENTORY
+            // THIS MEANS THAT IT HAS ALREADY BEEN PICKED UP
+            if (Phaser.Input.Keyboard.JustDown(this.e) && obj.alpha != 0) {
+
+                if (UI.on) {
+                    this.game.events.emit('itemMode', 'city', false);
+                    
+                }
+                else {
+                    this.game.events.emit('itemMode', "city", true); 
+                    if (!(UI.trade_inventory.contains(obj.item.name) || UI.inventory.contains(obj.item.name) || UI.soldItems.some(it => it == obj.item.name))) {
+                        UI.trade_inventory.add(obj.item, {x: 0, y: 0});
+                    }
+                    
+                }
+
+                UI.addRectangles();
+                player.switchUI();
+               
+                // send the item?
+                //console.log("name: " + obj.item.name)
+            }
         });
 
         //---------- CAMERA STUFF --------
@@ -269,6 +353,10 @@ export class City extends Phaser.Scene{
                 cop.update();
             }
         });
+
+        if (this.itemPrompt.alpha != 0 && !this.physics.overlap(this.player, this.objects)) {
+            this.itemPrompt.alpha = 0;
+        }
 
         //center coords of camera
         this.cameraCenterX = this.cameras.main.scrollX + this.cameras.main.width / 2;

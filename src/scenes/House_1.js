@@ -71,9 +71,29 @@ export class House_1 extends Phaser.Scene {
         
         this.objects = this.physics.add.staticGroup();
         objects.forEach(obj =>  {
-            let sprite = this.objects.create(obj.x + 260, obj.y + 128, "sword").setDepth(3).setScale(0.06);//.setScale(this.MAPSCALE);
+
+            let obname;
+            let adjustX; let adjustY;
+            let obScale;
+
+            console.log(obj.properties.find(p => p.name === "name").value);
+            if (obj.properties.find(p => p.name === "name").value == "sword") {
+                adjustX = 260;
+                adjustY = 128;
+                obScale = 0.06;
+                obname = "sword";
+            }
+            else if (obj.properties.find(p => p.name === "name").value == "juice") {
+                adjustX = 160;
+                adjustY = 100;
+                obScale = 0.06;
+                obname = "juice";
+            }
+            
+
+            let sprite = this.objects.create(obj.x + adjustX, obj.y + adjustY, obname).setDepth(3).setScale(obScale);//.setScale(this.MAPSCALE);
             sprite.setOrigin(1,0);
-            sprite.item = new Item("sword");
+            sprite.item = new Item(obname);
             sprite.body.updateFromGameObject();
             // object defined with a name that matches a loaded image
            
