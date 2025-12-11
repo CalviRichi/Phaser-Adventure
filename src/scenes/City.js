@@ -341,8 +341,23 @@ export class City extends Phaser.Scene{
         
      //   console.log(this.player.x + ", " + this.player.y);
 
-        
-        
+        //AGGRO'ING COPS
+        this.cop_group.getChildren(cop => {
+            if (cop && cop.isAggressive == false){
+                if (cop.checkPlayerInRange(this.player) == true){
+                    cop.becomeAggressive(this.player);
+                }
+            }
+            
+        });
+
+        this.aggressiveCops.forEach(grrCop => {
+            if (grrCop){
+                if (grrCop.checkPlayerInRange(this.player) == false || grrCop.isPlayerFarEnough(this.player) == true){
+                    grrCop.resetCops();
+                }
+            }
+        });
     }
 
     enterHouse(house) {
