@@ -10,6 +10,12 @@
 ## FEATURES TO NOTICE:
     Our central system of the game is the player inventory system. It was one of the most challenging aspects of the game to code, and it also ties into the trading system. 
 
+    The inventory is based off of the inventory from the Resident Evil games, with some additional inspiration from Minecraft. It is quite robust and should* be completely free of errors.
+    There is a lot of interplay between the underlying data structure and what gets visually represented, and it feels pretty snappy and smooth.
+
+    The house entering/exiting system is also of note, with seemless transitions that fade into one another (there's some juice right there). This system is aided by the UI which acts as a means
+    of saving state across different scenes, helping maintain the flow of the game.
+
     Another key system of the game is the costume switching. Players can only rob houses while wearing the robber outfit, and can only trade while wearing the business suit. Additionally, cops will only go aggro if the player is wearing the robber suit, so it is important to be careful and time your sneaking around the cops!
 
 
@@ -29,7 +35,15 @@
 
 * ### OBJECTS:
 
-    - Player.js - 
+    - Player.js - the player character.
+
+    - Cop.js - the cop enemies that roam the town.
+
+    - NPC.js - the NPCs that you can trade with.
+
+    - Inventory.js - the data structure behind the inventory system.
+
+    - Item.js - a simple file for populating the inventory.
 
 
 * ### RUBRIC EVALUATION:
