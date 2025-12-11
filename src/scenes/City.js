@@ -57,7 +57,7 @@ export class City extends Phaser.Scene{
             this.bgmusic.play();     
         });
 
-        this.door = this.sound.add('door', {
+        this.doorSound = this.sound.add('door', {
             volume: 2, 
             loop: false
         });
@@ -273,7 +273,7 @@ export class City extends Phaser.Scene{
             
             //only listen for key presses if they're in the right area
             if (Phaser.Input.Keyboard.JustDown(this.e)){
-                this.door.play();
+                this.doorSound.play();
                 this.cameras.main.fadeOut(500, 0, 0, 0);
                 this.cameras.main.once('camerafadeoutcomplete', () => {
 
@@ -293,7 +293,7 @@ export class City extends Phaser.Scene{
                 this.doorPrompt.setPosition(this.cameraCenterX, this.cameraCenterY);
                 this.doorPrompt.setAlpha(1);
                 if (Phaser.Input.Keyboard.JustDown(this.e)){
-                    this.door.play();
+                    this.doorSound.play();
                     this.cameras.main.fadeOut(500, 0, 0, 0);
                     this.cameras.main.once('camerafadeoutcomplete', () => {
                         this.scene.run('House_1');
