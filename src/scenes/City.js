@@ -17,9 +17,16 @@ export class City extends Phaser.Scene{
         this.copSpawnTimer = null; //to keep track of time for the spawning
         this.spawnRate = 5000; //how often they will spawn (30000 = 30 seconds apart)
         this.maxCops = 10; //use this variable to limit how many cops can be spawned in at any one time (if needed)
-        //this.copAttackRate = 5000; //how often they can throw a punch
         this.copLoc = "right"; //to know which side of the street to spawn them on
         this.coordx = 0; //to know which coord locations to spawn them at
+        //the following variables are for when cops r aggressive to player
+        this.copsAggressive = false; //keep track when aggressive mode
+        this.aggressiveTimer = null; //cooldown timer for cops to go back to normal mode (if player gets away yk)
+        this.copRange = 150; //range that cops can detect player/range for if player is far enough away for cops to not be aggro
+        this.escapeTime = 4000; //how many seconds player need to be out of cop range
+        this.aggroSpawnRate = 1000; //how often cops will spawn when aggro
+        this.copAttackRate = 1000; //how often cops can damage player 
+        this.lastDamageTime = 0; //to help keep track of copAttackRate
     }
 
     preload(){
@@ -34,31 +41,19 @@ export class City extends Phaser.Scene{
     }
 
     create(){
-
+        //i only want this sound to play when police r aggro
         this.police = this.sound.add('police siren', {
             volume: 0.8,
-            loop: false
+            loop: true 
         });
 
         this.sys.events.on('wake', ()=> {
             this.sound.stopAll(); //kill any lingering music
-        this.bgmusic = this.sound.add('bgmusic', {
-            volume: 1.2,
-            loop: true
-        });
-        this.bgmusic.play();     
-        
-        this.time.delayedCall(5000, () => {
-            //play once initially
-            this.police.play();
-            this.time.addEvent({
-                delay: 13000, 
-                callback: () => {
-                    this.police.play();
-                },
-                loop: true //loop infinitely
+            this.bgmusic = this.sound.add('bgmusic', {
+                volume: 1.2,
+                loop: true
             });
-        });
+            this.bgmusic.play();     
         });
 
         this.time.delayedCall(5000, () => {
@@ -150,36 +145,10 @@ export class City extends Phaser.Scene{
         });
         
         this.physics.add.collider(this.player, door, (player, tile) => {
-        //    console.log(tile.index);
-            
+        //    console.log(tile.index);    
             if ( player.enter && (tile.index == 310 || tile.index == 1506 || tile.index == 1435 || tile.index == 1436)) {
                 player.x -= 200;
-            }
-            /*
-            let house = "";
-            switch (tile.index) {
-                case 309:
-                    house = "business"; 310
-                    break;
-                case 1019:
-                    house = "apartment"; // 1506
-                    break;
-                case 948: // 948 and 949 would do the same thing // 1435 and 36
-                    house = "market";
-                    break;
-                case 949:
-                    house = "market";
-                    break;
-            }
-            if (player.outfit == "robber") {
-                this.enterHouse(house);
-            }
-            else if (player.outfit == "business") {
-                // check if NPC home -> sell sequence
-                this.beginSale(house);
-            }
-            */
-            
+            } 
         });
         
         this.physics.add.collider(this.player, cars, (player, tile) => {
@@ -187,6 +156,11 @@ export class City extends Phaser.Scene{
         });
         this.physics.add.collider(this.player, decoration, (player, tile) => {
 
+        });
+        
+        //add colliders between player n cops so its harder to escape them (and can call a function)
+        this.physics.add.collider(this.player, this.cop_group, (player, cop) => {
+            this.playerCopCollision(player, cop); //also cops can only attack player if they r colliding
         });
 
         //---------- CAMERA STUFF --------
@@ -223,6 +197,25 @@ export class City extends Phaser.Scene{
             stroke: '#000000',
             strokeThickness: 3
         }).setAlpha(0).setDepth(7).setOrigin(0.5);
+    }
+
+    playerCopCollision(player, cop){
+        //do nothing if player is in business suit
+        if (this.player.clothing == "business"){
+            return;
+        }
+
+        //cop can only attack (damage player) when in collision w/ them
+        //also, they can only attack if they have had enough cooldown time since their last attack (this.copAttackRate being the cooldown time)
+        const currentTime = this.time.now;
+        if (currentTime - this.lastDamageTime > this.damageCooldown){
+            this.player.health -= 10; //update player health (low health is tracked n will trigger endgame condition in HUD)
+            this.game.events.emit('health_update', this.player.health); //update HUD
+            this.lastDamageTime = currentTime; //update damage counter
+
+            //this is to give some visual feedback to player (JUICE)(#red40)
+            this.cameras.main.flash(300, 255, 0, 0);
+        }
     }
 
     //this is for spawning cops in (this is just a looping timing function basically)

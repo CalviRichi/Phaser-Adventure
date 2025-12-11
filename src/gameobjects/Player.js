@@ -163,6 +163,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite{
         this.scene = scene;
         this.x = x; this.y = y;
         this.clothing = "robber";
+        this.health = 100; //will go down when cops r in aggro mode n can hit player
         this.speed = 250 * weight; //used in update() for movement (change ## to change speed)
         console.log("speed: " + this.speed);
         //adding physics n world colliders to player sprite
