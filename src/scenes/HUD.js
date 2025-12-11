@@ -106,24 +106,27 @@ export class HUD extends Phaser.Scene {
         if (this.timesArrested > 2){ //if arrested for a third time, end game (loss condition)
             this.won = false; //just making sure its correct
             this.arrestLoss.setAlpha(1);
-            
-            this.time.delayedCall(4000, () => {
-                this.scene.stop('UI');
-                this.scene.stop('City');
-                this.scene.stop('HUD');
-                this.scene.start('EndGame');
-            });
         }
 
         if (this.totalMoney >= 100){ //if player reaches goal money, end game (win condition)
             this.won = true;
             this.moneyWin.setAlpha(1);
-            
+        }
+
+        if (this.totalMoney >= 100 || this.timesArrested > 2){
             this.time.delayedCall(4000, () => {
-                this.scene.stop('UI');
-                this.scene.stop('City');
-                this.scene.stop('HUD');
-                this.scene.start('EndGame');
+                this.cameras.main.fadeOut(500, 0, 0, 0);
+                this.cameras.main.once('camerafadeoutcomplete', () => {
+                    this.scene.start('EndGame', {
+                        won: this.won,
+                        arrests: this.timesArrested,
+                        money: this.totalMoney
+                    });
+                    this.scene.stop('UI');
+                    this.scene.stop('HUD');
+                    this.scene.stop('City');
+                    this.scene.get('EndGame').cameras.main.fadeIn(500, 0, 0, 0);
+                });
             });
         }
     }
