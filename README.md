@@ -67,4 +67,4 @@
         These categories are technically two separate things, but I have chosen to combine them because of the way that our team tackled this issue. Claire created all of the visual elements of the game (tilemaps and such). (Calvin was planning on creating some more indoor tilemaps, but didn't due to lack of time. But this was balanced out by him focusing on some of our most challenging code (inventory/trading system)). We did not create everything we had initially hoped to. We have less houses then planned, a smaller "city," and not really any easter eggs. Despite this, I am proud of the visual look of our game, and I believe its fun pixel art aesthetic is perfect for our silly game about stealing. 
         Thus, I would still give us 4/6 points for these categories combined, as our scope got a lot more drawn in as we continued making the game, but I am still proud of what we have completed. 
 
-    
+    LINK TO REPO: https://github.com/CalviRichi/Phaser-Adventure
