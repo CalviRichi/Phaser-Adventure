@@ -2,13 +2,16 @@
 **Repository for a Phaser top-down adventure style game | Created by Calvin Richards and Claire Buck**
 ---
 
-## KEY STRUCTURES:
+## GAMEPLAY:
+    The story behind our game is the idea that the player is both a robber and a business man. The goal is to break into people's houses, steal items from them, and then sell their items back to them. Part of the challenge is to do this without getting busted by the cops. If you let cops near enough to you, they can damage you, and if they lower your health to 0, it will count as an arrest. If you are arrested 3 times, the game will end. If you surpass a certain monetary goal, the game will end with you as a victor. (Also-helpful hint-it's important to head over to the lair for costume switches!)
     
-- The central structure of the game is the player inventory system, which also handles how player data
-    is passed between scenes.
+    All the keys and controls for the game are presented on the title screen.
 
-- There will be a DOOR object that has a value tied to one of the houses. Corresponding function in the 
-city class that takes in the door value. 
+## FEATURES TO NOTICE:
+    Our central system of the game is the player inventory system. It was one of the most challenging aspects of the game to code, and it also ties into the trading system. 
+
+    Another key system of the game is the costume switching. Players can only rob houses while wearing the robber outfit, and can only trade while wearing the business suit. Additionally, cops will only go aggro if the player is wearing the robber suit, so it is important to be careful and time your sneaking around the cops!
+
 
 ## FILES:
 
@@ -47,6 +50,7 @@ city class that takes in the door value.
         I believe we have earned the full point for this category. 
 
     Indoor Design (3 points) & Outdoor Design (3 points):
-        These categories are technically two separate things, but I have chosen to combine them because of the way that our team tackled this issue. Claire created all of the visual elements of the game
+        These categories are technically two separate things, but I have chosen to combine them because of the way that our team tackled this issue. Claire created all of the visual elements of the game (tilemaps and such). (Calvin was planning on creating some more indoor tilemaps, but didn't due to lack of time. But this was balanced out by him focusing on some of our most challenging code (inventory/trading system)). We did not create everything we had initially hoped to. We have less houses then planned, a smaller "city," and not really any easter eggs. Despite this, I am proud of the visual look of our game, and I believe its fun pixel art aesthetic is perfect for our silly game about stealing. 
+        Thus, I would still give us 4/6 points for these categories combined, as our scope got a lot more drawn in as we continued making the game, but I am still proud of what we have completed. 
 
     
